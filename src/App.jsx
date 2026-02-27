@@ -16,26 +16,21 @@ export default function App() {
   const bgOpacity = useTransform(scrollYProgress, [0, 0.35], [1, 0.25]);
   const bgBlur = useTransform(scrollYProgress, [0, 0.35], [0, 22]);
 
+  // ✅ bikin filter string dari bgBlur (tanpa .to())
+  const blurFilter = useTransform(bgBlur, (v) => `blur(${v}px)`);
+
   return (
     <div ref={ref} className="page">
       <motion.div
         className="bg"
         style={{
           opacity: bgOpacity,
-          const blurFilter = useTransform(
-  bgBlur,
-  v => `blur(${v}px)`
-)
-
-<motion.div style={{ filter: blurFilter }} />,
+          filter: blurFilter,
         }}
       />
 
       <section className="hero">
-        <motion.div
-          className="heroInner"
-          style={{ opacity: heroOpacity, y: artY }}
-        >
+        <motion.div className="heroInner" style={{ opacity: heroOpacity, y: artY }}>
           <motion.img
             className="art"
             style={{ scale: artScale }}
