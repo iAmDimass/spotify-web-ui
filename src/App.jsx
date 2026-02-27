@@ -22,7 +22,12 @@ export default function App() {
         className="bg"
         style={{
           opacity: bgOpacity,
-          filter: bgBlur.to((v) => `blur(${v}px)`),
+          const blurFilter = useTransform(
+  bgBlur,
+  v => `blur(${v}px)`
+)
+
+<motion.div style={{ filter: blurFilter }} />,
         }}
       />
 
