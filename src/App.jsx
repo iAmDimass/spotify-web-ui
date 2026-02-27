@@ -34,7 +34,7 @@ export default function App() {
           <motion.img
             className="art"
             style={{ scale: artScale }}
-            src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1200&q=80"
+            src="https://media.pitchfork.com/photos/5929a155ea9e61561daa4792/1:1/w_320,c_limit/2dffcc62.jpg"
             alt="artwork"
           />
           <div className="meta">
