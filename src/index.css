@@ -199,3 +199,47 @@
 @media (max-width: 420px) {
   .spLyricBig { font-size: 30px; }
 }
+
+
+/* Make sheet behave like a Spotify bottom sheet */
+.spSheetFixed {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  /* Start size */
+  height: 92vh;                 /* nearly full height like Spotify */
+  max-width: 520px;             /* optional: keep centered on desktop */
+  margin: 0 auto;
+
+  z-index: 50;
+}
+
+/* The handle area is the only drag region */
+.spHandleArea {
+  padding: 10px 0 6px;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;           /* important for smooth drag on mobile */
+}
+
+.spHandleArea:active {
+  cursor: grabbing;
+}
+
+/* Inner scroll area (lyrics content scrolls inside sheet) */
+.spSheetScroll {
+  height: calc(92vh - 72px);    /* subtract header/handle area approx */
+  overflow: auto;
+  padding-bottom: 24px;
+
+  /* iOS momentum scroll */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Slightly stronger sheet blur for Spotify feel */
+.spSheet {
+  background: rgba(12,12,16,0.78);
+  backdrop-filter: blur(18px);
+}
