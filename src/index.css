@@ -3,26 +3,23 @@ html, body { margin: 0; padding: 0; }
 
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: #0b0b0f; /* constant dark background */
+  background: #0b0b0f;
   color: rgba(255,255,255,0.92);
   overflow-x: hidden;
 }
 
-.page {
-  min-height: 200vh;
-}
+.page { min-height: 200vh; }
 
-/* HERO (Section 1) */
+/* HERO */
 .hero {
   position: relative;
-  height: 92vh;                 /* <-- makes section 2 peek naturally */
+  height: 92vh;              /* keeps next section peeking */
   overflow: hidden;
   background-size: cover;
   background-position: center;
   background-color: #0b0b0f;
 }
 
-/* Static overlay (NOT animated) */
 .heroOverlay {
   position: absolute;
   inset: 0;
@@ -32,55 +29,65 @@ body {
   pointer-events: none;
 }
 
-/* Hero text */
+/* KEY FIX:
+   Move content up from the bottom so it matches Spotify feel */
 .heroContent {
   position: relative;
   height: 100%;
-  padding: 24px 16px 22px;
-  display: grid;
-  align-content: end;
-  gap: 10px;
   width: min(560px, 94vw);
   margin: 0 auto;
+
+  /* Instead of sticking at bottom, use lower-third positioning */
+  display: grid;
+  align-content: end;
+
+  /* This pushes it UP consistently on mobile */
+  padding: 24px 16px clamp(110px, 18vh, 180px);
+
+  gap: 10px;
 }
 
 .heroTitle {
   font-size: 34px;
   font-weight: 950;
-  letter-spacing: 0.2px;
   line-height: 1.05;
   text-shadow: 0 10px 40px rgba(0,0,0,0.55);
 }
 
 .heroDesc {
   font-size: 14px;
-  opacity: 0.8;
+  opacity: 0.82;
   line-height: 1.45;
-  max-width: 48ch;
+  max-width: 52ch;
 }
 
 /* SECTIONS */
 .sections {
   background: #0b0b0f;
-  padding: 14px 16px 16px;
+  padding: 10px 16px 16px;
 }
 
-/* IMPORTANT: no special peek bar.
-   The peek happens naturally because .hero is < 100vh. */
+/* Each section as a block (header peek + card) */
+.sectionBlock {
+  margin-top: 12px;
+}
 
+/* Spotify-like header peek:
+   small, simple, visible even with just a tiny peek */
+.sectionPeekHeader {
+  font-size: 16px;
+  font-weight: 900;
+  padding: 10px 6px 10px;
+  opacity: 0.95;
+}
+
+/* Card content starts below header */
 .sectionCard {
   border-radius: 18px;
   padding: 16px;
-  margin-top: 14px;            /* first card becomes the peek */
   background: rgba(20,20,24,0.85);
   border: 1px solid rgba(255,255,255,0.06);
   box-shadow: 0 18px 60px rgba(0,0,0,0.35);
-}
-
-.sectionTitle {
-  margin: 0 0 10px;
-  font-size: 16px;
-  font-weight: 900;
 }
 
 .sectionText {
@@ -90,7 +97,6 @@ body {
   line-height: 1.55;
 }
 
-/* Mobile tweak */
 @media (max-width: 420px) {
   .heroTitle { font-size: 30px; }
 }
