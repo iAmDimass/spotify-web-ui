@@ -1,166 +1,130 @@
-.spWhitePage{
-  min-height: 240vh; /* must be > 100vh to allow scrolling */
+.page {
+  min-height: 220vh; /* must be scrollable */
   background: #0b0b0f;
   color: rgba(255,255,255,0.92);
-  font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   overflow-x: hidden;
 }
 
-/* 1) Fixed artwork stage (100vh by definition) */
-.spArtwork{
+/* Cover: fixed, full screen, CROPS freely (Spotify feel) */
+.cover {
   position: fixed;
   inset: 0;
-  background-size: cover;        /* Spotify-like cropping */
-  background-position: center;
+  background-size: cover;         /* key */
+  background-position: center;    /* key */
   transform: translateZ(0);
   will-change: transform, filter;
   z-index: 0;
-  pointer-events: none;
 }
 
-/* 2) Blur layer (kept separate so blur feels like wallpaper) */
-.spBlurLayer{
+/* Separate blur wallpaper layer (acts like Spotify) */
+.coverBlur {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.001); /* keeps layer alive */
+  background: rgba(0,0,0,0.001);
   backdrop-filter: blur(0px);
   transform: translateZ(0);
   will-change: filter;
+  pointer-events: none;
   z-index: 1;
-  pointer-events: none;
 }
 
-/* 3) White wash overlay — THIS makes the background “white” */
-.spWash{
+/* Gradient mask is ALWAYS there */
+.coverGradient {
   position: fixed;
   inset: 0;
-  background: rgba(245,245,245,1);
+  pointer-events: none;
   z-index: 2;
-  pointer-events: none;
-  mix-blend-mode: screen; /* try: normal | screen. Screen looks very Spotify-ish */
+  background:
+    radial-gradient(900px 700px at 50% 30%, rgba(0,0,0,0.00), rgba(0,0,0,0.18) 55%, rgba(0,0,0,0.55) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.30) 55%, rgba(0,0,0,0.85) 100%);
 }
 
-/* 4) Bottom readability dim */
-.spDim{
+/* Dim overlay ramps up with scroll */
+.coverDim {
   position: fixed;
   inset: 0;
-  background:
-    linear-gradient(to bottom,
-      rgba(0,0,0,0.00) 0%,
-      rgba(0,0,0,0.12) 45%,
-      rgba(0,0,0,0.55) 100%);
-  z-index: 3;
   pointer-events: none;
+  z-index: 3;
+  background: rgba(0,0,0,1);
+  opacity: 0.1;
 }
 
-/* Hero content */
-.spHero{
+/* Foreground hero */
+.hero {
   position: relative;
   z-index: 10;
   min-height: 100vh;
   display: grid;
-  align-items: end;
-  padding: 18px 16px 22px;
+  place-items: center;
+  padding: 24px 16px;
 }
 
-.spHeroInner{
-  width: min(460px, 96vw);
+.heroInner {
+  width: min(420px, 92vw);
 }
 
-.spTitle{
-  font-size: 32px;
-  font-weight: 900;
-  letter-spacing: 0.2px;
-  text-shadow: 0 10px 40px rgba(0,0,0,0.45);
+.lyricLine {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  text-shadow: 0 6px 30px rgba(0,0,0,0.55);
 }
 
-.spArtist{
-  margin-top: 6px;
-  font-size: 18px;
-  opacity: 0.75;
-}
-
-.spProgress{
-  margin-top: 18px;
-}
-
-.spProgressTrack{
-  height: 4px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.22);
-  position: relative;
-}
-
-.spProgressDot{
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.92);
-  position: absolute;
-  top: 50%;
-  left: 44%;
-  transform: translate(-50%,-50%);
-}
-
-.spTimeRow{
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-  font-size: 12px;
-  opacity: 0.75;
-}
-
-/* Related preview */
-.spRelatedMini{ margin-top: 18px; }
-.spRelatedLabel{
-  font-size: 18px;
-  font-weight: 800;
-  opacity: 0.95;
-  margin-bottom: 10px;
-}
-.spRelatedCard{
+/* Track row */
+.trackRow {
   display: grid;
-  grid-template-columns: 64px 1fr 46px;
+  grid-template-columns: 56px 1fr 40px;
   gap: 12px;
   align-items: center;
-  padding: 12px;
-  border-radius: 18px;
-  background: rgba(0,0,0,0.24);
-  border: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(14px);
 }
-.spRelatedThumb{
-  width: 64px; height: 64px;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.10);
+
+.thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.55);
 }
-.spRelatedTitle{ font-weight: 900; font-size: 18px; }
-.spRelatedSub{ opacity: 0.75; margin-top: 4px; }
-.spPlus{
-  width: 40px; height: 40px;
+
+.trackTitle {
+  font-size: 22px;
+  font-weight: 800;
+  text-shadow: 0 6px 30px rgba(0,0,0,0.55);
+}
+
+.trackArtist {
+  margin-top: 2px;
+  font-size: 14px;
+  opacity: 0.75;
+}
+
+.check {
+  width: 34px;
+  height: 34px;
   border-radius: 999px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(255,255,255,0.06);
-  font-size: 20px;
+  background: rgba(29, 185, 84, 0.95);
+  color: #06140a;
+  font-weight: 900;
 }
 
-/* Sheet overlay (slides over the hero) */
-.spSheet{
+/* Sheet that rises over the cover */
+.sheet {
   position: relative;
   z-index: 40;
-  margin-top: -18vh; /* overlap like Spotify */
-  padding: 12px 16px 28px;
-  background: rgba(12,12,16,0.80);
+  margin-top: -26vh; /* overlap = spotify feel */
+  padding: 12px 16px 30px;
+  background: rgba(12,12,16,0.78);
   backdrop-filter: blur(16px);
   border-top-left-radius: 22px;
   border-top-right-radius: 22px;
   border-top: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 -20px 90px rgba(0,0,0,0.55);
+  box-shadow: 0 -20px 80px rgba(0,0,0,0.55);
 }
 
-.spHandle{
+.sheetHandle {
   width: 44px;
   height: 5px;
   border-radius: 999px;
@@ -168,38 +132,39 @@
   margin: 4px auto 12px;
 }
 
-.spSheetHeader{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.block { padding: 12px 0; }
+
+.h2 {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  opacity: 0.95;
 }
 
-.spSheetTitle{
-  font-size: 18px;
-  font-weight: 900;
+.card {
+  height: 86px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.06);
 }
 
-.spSheetBtns{ display: flex; gap: 10px; }
-.spRoundBtn{
-  width: 44px; height: 44px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.92);
-}
-
-/* Lyrics card (orange in your screenshot) */
-.spLyricsCard{
-  margin-top: 14px;
-  padding: 18px 16px;
+/* Lyrics card like Spotify */
+.lyricsCard {
+  margin-top: 10px;
+  padding: 16px 16px 18px;
   border-radius: 18px;
-  background: rgba(210, 95, 10, 0.92);
+  background: rgba(180, 90, 20, 0.75);
   border: 1px solid rgba(255,255,255,0.10);
 }
 
-.spLyricBig{
+.lyricBig {
   font-size: 34px;
   line-height: 1.08;
-  font-weight: 950;
+  font-weight: 900;
   margin: 0 0 18px;
+  color: rgba(255,255,255,0.96);
+}
+
+@media (max-width: 420px) {
+  .lyricBig { font-size: 30px; }
 }
