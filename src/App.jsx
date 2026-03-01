@@ -1,97 +1,249 @@
-// App.jsx
-// Spotify-like "hero artwork only" + normal dark content scroll
-// No music controls, no sticky header.
+/* styles.css */
 
-import { useMemo } from "react";
+/* Base */
+.spPage {
+  background: #0b0b0f;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  overflow-x: hidden;
+}
 
-export default function App() {
-  const artworkUrl = useMemo(
-    () =>
-      "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1600&q=80&auto=format&fit=crop",
-    []
+/* HERO (artwork ONLY here) */
+.spHero {
+  position: relative;
+  height: 100vh; /* ✅ artwork only for this height */
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+/* Dark overlay (very important for white artwork) */
+.spHeroOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.46);
+}
+
+/* Content inside hero */
+.spHeroInner {
+  position: relative;
+  z-index: 2;
+  padding: 54px 16px 18px;
+  width: min(520px, 92vw);
+  margin: 0 auto;
+}
+
+.spHeroKicker {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.spHeroSub {
+  margin-top: 6px;
+  font-size: 18px;
+  font-weight: 650;
+  opacity: 0.8;
+}
+
+/* Track row */
+.spTrackRow {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 56px 1fr 44px;
+  gap: 12px;
+  align-items: center;
+}
+
+.spThumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+}
+
+.spTrackTitle {
+  font-size: 22px;
+  font-weight: 850;
+  letter-spacing: 0.2px;
+  text-shadow: 0 6px 30px rgba(0, 0, 0, 0.55);
+}
+
+.spTrackArtist {
+  margin-top: 2px;
+  font-size: 14px;
+  opacity: 0.75;
+}
+
+.spAddBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 24px;
+  line-height: 0;
+}
+
+/* Progress */
+.spProgress {
+  margin-top: 16px;
+}
+
+.spProgressBar {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  position: relative;
+  overflow: hidden;
+}
+
+.spProgressFill {
+  width: 40%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.spProgressDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+}
+
+.spTimes {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+/* Fade to dark at bottom of hero (makes the transition feel Spotify-like) */
+.spHeroFade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 240px;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    rgba(11, 11, 15, 0) 0%,
+    rgba(11, 11, 15, 0.55) 45%,
+    rgba(11, 11, 15, 1) 100%
   );
+}
 
-  return (
-    <div className="spPage">
-      {/* HERO: artwork exists ONLY in this section height */}
-      <section
-        className="spHero"
-        style={{ backgroundImage: `url(${artworkUrl})` }}
-      >
-        {/* Dark overlay so white artwork stays readable */}
-        <div className="spHeroOverlay" />
+/* CONTENT (normal scroll) */
+.spContent {
+  background: #0b0b0f;
+  padding: 16px 16px 40px;
+}
 
-        {/* Hero content */}
-        <div className="spHeroInner">
-          <div className="spHeroKicker">PLAYING FROM SEARCH</div>
-          <div className="spHeroSub">"titik" in Search</div>
+.spSectionTitle {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 850;
+  opacity: 0.95;
+}
 
-          <div className="spTrackRow">
-            <img className="spThumb" src={artworkUrl} alt="Album art" />
-            <div className="spTrackMeta">
-              <div className="spTrackTitle">titik di ujung doa</div>
-              <div className="spTrackArtist">Sal Priadi</div>
-            </div>
-            <button className="spAddBtn" aria-label="Add">
-              +
-            </button>
-          </div>
+/* Related card */
+.spRelatedCard {
+  display: grid;
+  grid-template-columns: 64px 1fr 44px;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
+}
 
-          <div className="spProgress">
-            <div className="spProgressBar">
-              <div className="spProgressFill" />
-              <div className="spProgressDot" />
-            </div>
-            <div className="spTimes">
-              <span>2:18</span>
-              <span>5:05</span>
-            </div>
-          </div>
-        </div>
+.spRelatedThumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+}
 
-        {/* Gradient fade to dark at bottom, hides the "cut" like Spotify */}
-        <div className="spHeroFade" />
-      </section>
+.spRelatedTitle {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
 
-      {/* CONTENT: normal scroll on dark background */}
-      <main className="spContent">
-        <h2 className="spSectionTitle">Related Track</h2>
+.spRelatedSub {
+  font-size: 13px;
+  opacity: 0.75;
+  line-height: 1.25;
+}
 
-        <div className="spRelatedCard">
-          <div className="spRelatedThumb" />
-          <div className="spRelatedText">
-            <div className="spRelatedTitle">Ada Titik-Titik Di</div>
-            <div className="spRelatedSub">
-              Song • Ada Titik-Titik Di Ujung Doa (Live Performance)
-            </div>
-          </div>
-          <button className="spAddSmall" aria-label="Add related">
-            +
-          </button>
-        </div>
+.spAddSmall {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 24px;
+  line-height: 0;
+}
 
-        {/* Lyrics card (like Spotify orange block) */}
-        <section className="spLyricsCard">
-          <div className="spLyricsHeader">
-            <div className="spLyricsLabel">Lyrics</div>
-            <div className="spLyricsBtns">
-              <button className="spRoundBtn" aria-label="Share lyrics">
-                ⤴
-              </button>
-              <button className="spRoundBtn" aria-label="Expand lyrics">
-                ⤢
-              </button>
-            </div>
-          </div>
+/* Lyrics card (orange) */
+.spLyricsCard {
+  margin-top: 16px;
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(196, 92, 0, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
 
-          <p className="spLyricsLine">Kucoba memaafkanmu selalu</p>
-          <p className="spLyricsLine">Kalau di situ ada salahku</p>
-          <p className="spLyricsLine">Maafkan ku juga</p>
-        </section>
+.spLyricsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-        {/* Add more content so you can scroll like the app */}
-        <div style={{ height: 900 }} />
-      </main>
-    </div>
-  );
+.spLyricsLabel {
+  font-size: 18px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.spLyricsBtns {
+  display: flex;
+  gap: 10px;
+}
+
+.spRoundBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 18px;
+}
+
+.spLyricsLine {
+  margin: 16px 0 0;
+  font-size: 34px;
+  font-weight: 950;
+  line-height: 1.05;
+  color: rgba(255, 255, 255, 0.96);
+}
+
+/* Mobile tweak */
+@media (max-width: 420px) {
+  .spLyricsLine {
+    font-size: 30px;
+  }
 }
