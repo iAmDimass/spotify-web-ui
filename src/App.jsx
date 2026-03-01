@@ -1,6 +1,6 @@
 export default function App() {
   const artworkUrl =
-    "https://image2url.com/r2/default/images/1772355798345-e4c9c96d-86bb-415f-85e0-7932a4873b8b.jpg";
+    "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?w=1600&q=80&auto=format&fit=crop";
 
   const sections = [
     {
@@ -23,7 +23,7 @@ export default function App() {
 
   return (
     <div className="page">
-      {/* SECTION 1: HERO */}
+      {/* SECTION 1: HERO (true full screen) */}
       <section
         className="hero"
         style={{ backgroundImage: `url(${artworkUrl})` }}
@@ -39,14 +39,11 @@ export default function App() {
         </div>
       </section>
 
-      {/* SECTION 2+: normal scroll */}
+      {/* SECTION 2+: normal scroll content */}
       <main className="sections">
         {sections.map((s) => (
           <section key={s.title} className="sectionBlock">
-            {/* Spotify-like peek header strip */}
             <div className="sectionPeekHeader">{s.title}</div>
-
-            {/* Content card (starts below, so peek shows mostly header) */}
             <div className="sectionCard">
               <p className="sectionText">{s.text}</p>
             </div>
