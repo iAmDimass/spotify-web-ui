@@ -1,6 +1,6 @@
 export default function App() {
   const artworkUrl =
-    "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?w=1600&q=80&auto=format&fit=crop";
+    "https://image2url.com/r2/default/images/1772355798345-e4c9c96d-86bb-415f-85e0-7932a4873b8b.jpg";
 
   const sections = [
     {
