@@ -1,29 +1,70 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HeroLayout from "./layout/HeroLayout";
-import Home from "./routes/Home";
-import About from "./routes/About";
+import { useEffect, useState } from "react";
 
 export default function App() {
+  const artwork =
+    "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1600&q=80&auto=format&fit=crop";
+
+  const [heroHeight, setHeroHeight] = useState(null);
+
+  // Measure viewport ONCE on first visit
+  useEffect(() => {
+    const height =
+      window.visualViewport?.height ||
+      document.documentElement.clientHeight ||
+      window.innerHeight;
+
+    setHeroHeight(height);
+  }, []);
+
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Route group using the reusable hero layout */}
-        <Route
-          element={
-            <HeroLayout
-              hero={{
-                artwork:
-                  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1600&q=80&auto=format&fit=crop",
-                title: "Discover New Experiences",
-                desc: "A simple hero section with a background artwork. Scroll down to see more sections below.",
-              }}
-            />
-          }
-        >
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <div className="page">
+      {/* HERO */}
+      <section
+        className="hero"
+        style={heroHeight ? { height: `${heroHeight}px` } : undefined}
+      >
+        <img
+          src={artwork}
+          alt=""
+          className="heroImage"
+          draggable={false}
+        />
+        <div className="heroOverlay" />
+
+        <div className="heroContent">
+          <h1 className="heroTitle">Discover New Experiences</h1>
+          <p className="heroDesc">
+            Hero height is locked to the first screen the user sees.
+          </p>
+        </div>
+      </section>
+
+      {/* CONTENT */}
+      <main className="surface">
+        <section className="card">
+          <h2 className="cardHeader">Overview</h2>
+          <p className="cardText">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Sed ullamcorper, velit nec pharetra tincidunt.
+          </p>
+        </section>
+
+        <section className="card">
+          <h2 className="cardHeader">Details</h2>
+          <p className="cardText">
+            Praesent eget erat non leo posuere interdum.
+          </p>
+        </section>
+
+        <section className="card">
+          <h2 className="cardHeader">Features</h2>
+          <p className="cardText">
+            Morbi eleifend, nibh vitae vulputate vulputate.
+          </p>
+        </section>
+
+        <div style={{ height: 700 }} />
+      </main>
+    </div>
   );
 }
