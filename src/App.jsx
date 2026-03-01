@@ -1,56 +1,65 @@
 export default function App() {
-  const artworkUrl =
-    "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?w=1600&q=80&auto=format&fit=crop";
-
-  const sections = [
-    {
-      title: "Overview",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ullamcorper, velit nec pharetra tincidunt, augue risus ultrices nisi, vitae posuere neque purus sed elit.",
-    },
-    {
-      title: "Details",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eget erat non leo posuere interdum. Integer non justo sed orci feugiat ultricies.",
-    },
-    {
-      title: "Features",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi eleifend, nibh vitae vulputate vulputate, massa arcu luctus justo, sit amet luctus enim erat sed mi.",
-    },
-    {
-      title: "More Information",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam erat volutpat. Donec ac felis id libero tincidunt consequat. Duis non ex in justo elementum volutpat.",
-    },
-  ];
+  const artwork =
+    "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1600&q=80&auto=format&fit=crop";
 
   return (
     <div className="page">
-      {/* SECTION 1: HERO (true full screen) */}
+      {/* HERO */}
       <section
         className="hero"
-        style={{ backgroundImage: `url(${artworkUrl})` }}
+        style={{ backgroundImage: `url(${artwork})` }}
       >
-        <div className="heroOverlay" aria-hidden="true" />
+        <div className="heroOverlay" />
 
         <div className="heroContent">
-          <div className="heroTitle">Discover New Experiences</div>
-          <div className="heroDesc">
-            A simple hero section with a background artwork. Scroll down to see
-            more sections below.
-          </div>
+          <h1 className="heroTitle">Discover New Experiences</h1>
+          <p className="heroDesc">
+            A simple hero section with a background artwork.
+            Scroll down to see more sections below.
+          </p>
         </div>
       </section>
 
-      {/* SECTION 2+: normal scroll content */}
+      {/* SECTION 2 */}
       <main className="sections">
-        {sections.map((s) => (
-          <section key={s.title} className="sectionBlock">
-            <div className="sectionPeekHeader">{s.title}</div>
-            <div className="sectionCard">
-              <p className="sectionText">{s.text}</p>
-            </div>
-          </section>
-        ))}
+        <section className="section">
+          {/* THIS is the peek header */}
+          <div className="sectionHeader peek">
+            Overview
+          </div>
 
-        <div style={{ height: 800 }} />
+          {/* Card content stays clean */}
+          <div className="sectionCard">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Sed ullamcorper, velit nec pharetra tincidunt, augue risus
+              ultrices nisi, vitae posuere neque purus sed elit.
+            </p>
+          </div>
+        </section>
+
+        {/* More sections */}
+        <section className="section">
+          <div className="sectionHeader">Details</div>
+          <div className="sectionCard">
+            <p>
+              Praesent eget erat non leo posuere interdum.
+              Integer non justo sed orci feugiat ultricies.
+            </p>
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="sectionHeader">Features</div>
+          <div className="sectionCard">
+            <p>
+              Morbi eleifend, nibh vitae vulputate vulputate,
+              massa arcu luctus justo, sit amet luctus enim erat sed mi.
+            </p>
+          </div>
+        </section>
+
+        <div style={{ height: 600 }} />
       </main>
     </div>
   );
