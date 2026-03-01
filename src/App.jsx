@@ -2,80 +2,97 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function App() {
-  const ref = useRef(null);
+  const pageRef = useRef(null);
 
-  // scroll progress across the whole page
   const { scrollYProgress } = useScroll({
-    target: ref,
+    target: pageRef,
     offset: ["start start", "end end"],
   });
 
-  /**
-   * Spotify behavior:
-   * - cover window starts near full height
-   * - collapses upward to a smaller height
-   * - image itself doesn't scale; it's just clipped
-   */
-  const heroH_vh = useTransform(scrollYProgress, [0, 0.22], [100, 52]); // tweak end height
-  const heroHeight = useTransform(heroH_vh, (v) => `${v}vh`);
+  // Background transitions
+  const bgScale = useTransform(scrollYProgress, [0, 0.35], [1.06, 1.0]);
+  const bgDim = useTransform(scrollYProgress, [0, 0.35], [0.10, 0.65]);
+  const bgBlurPx = useTransform(scrollYProgress, [0, 0.35], [0, 22]);
+  const bgBlur = useTransform(bgBlurPx, (v) => `blur(${v}px)`);
+  const bgSat = useTransform(scrollYProgress, [0, 0.35], [1.25, 0.85]);
+  const bgCont = useTransform(scrollYProgress, [0, 0.35], [1.05, 1.0]);
+  const bgFilter = useTransform([bgSat, bgCont], ([s, c]) => `saturate(${s}) contrast(${c})`);
 
-  // optional: slight dim/blur increase (secondary effect)
-  const dimOpacity = useTransform(scrollYProgress, [0, 0.22], [0.05, 0.35]);
-  const blurPx = useTransform(scrollYProgress, [0, 0.22], [0, 10]);
-  const blurFilter = useTransform(blurPx, (v) => `blur(${v}px)`);
+  // Hero transitions
+  const heroY = useTransform(scrollYProgress, [0, 0.25], [0, -18]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0.65]);
 
-  const coverUrl =
+  // Sheet rise
+  const sheetY = useTransform(scrollYProgress, [0, 0.25], [220, 0]);
+
+  const artworkUrl =
     "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1600&q=80&auto=format&fit=crop";
 
   return (
-    <div ref={ref} className="spPage">
-      {/* Dark surface behind everything (Spotify bottom area) */}
-      <div className="spSurface" />
+    <div ref={pageRef} className="spPage">
+      {/* Fixed background artwork */}
+      <motion.div
+        className="spBg"
+        style={{
+          backgroundImage: `url(${artworkUrl})`,
+          scale: bgScale,
+          filter: bgFilter,
+        }}
+        aria-hidden="true"
+      />
 
-      {/* Collapsing cover window (THIS is the Spotify trick) */}
-      <motion.header className="spHero" style={{ height: heroHeight }}>
-        {/* Image is INSIDE a clipped container. It doesn't resize; it gets cropped. */}
-        <motion.div
-          className="spHeroImg"
-          style={{
-            backgroundImage: `url(${coverUrl})`,
-            filter: blurFilter, // optional
-          }}
-          aria-hidden="true"
-        />
+      {/* Blur & dim overlays */}
+      <motion.div className="spBgBlur" style={{ filter: bgBlur }} aria-hidden="true" />
+      <motion.div className="spBgDim" style={{ opacity: bgDim }} aria-hidden="true" />
 
-        {/* Soft fade at bottom of hero so the cut line isn’t harsh */}
-        <div className="spHeroFade" aria-hidden="true" />
+      {/* Hero content (no controls, no top bar) */}
+      <section className="spHero">
+        <motion.div className="spHeroInner" style={{ y: heroY, opacity: heroOpacity }}>
+          <div className="spLyricLine">Your face against the trees</div>
 
-        {/* Optional dim overlay */}
-        <motion.div className="spHeroDim" style={{ opacity: dimOpacity }} aria-hidden="true" />
-
-        {/* Foreground content on top of the cover */}
-        <div className="spHeroContent">
-          <div className="spKicker">PLAYING FROM SEARCH</div>
-          <div className="spTitle">Ada titik-titik di ujung doa</div>
-          <div className="spArtist">Sal Priadi</div>
-        </div>
-      </motion.header>
-
-      {/* Everything below sits on the dark surface */}
-      <main className="spBody">
-        <section className="spSection">
-          <h3>Related Track</h3>
-          <div className="spCard">Related item…</div>
-        </section>
-
-        <section className="spSection">
-          <h3>Lyrics</h3>
-          <div className="spLyricsCard">
-            <p>Kucoba memaafkanmu selalu</p>
-            <p>Kalau di situ ada salahku</p>
-            <p>Maafkan ku juga</p>
+          <div className="spTrackRow">
+            <img className="spThumb" src={artworkUrl} alt="" />
+            <div className="spTrackMeta">
+              <div className="spTrackTitle">Saw Your Face Today</div>
+              <div className="spTrackArtist">She &amp; Him</div>
+            </div>
+            <div className="spCheck">✓</div>
           </div>
-        </section>
+        </motion.div>
+      </section>
 
-        <div style={{ height: 900 }} />
-      </main>
+      {/* Lyrics sheet */}
+      <motion.section className="spSheet" style={{ y: sheetY }}>
+        <div className="spHandle" />
+
+        <div className="spSheetHeader">
+          <div className="spSheetTitle">Lyrics</div>
+          <div className="spSheetHeaderBtns">
+            <button className="spRoundBtn" aria-label="Share lyrics">⤴</button>
+            <button className="spRoundBtn" aria-label="Expand">⤢</button>
+          </div>
+        </div>
+
+        <div className="spLyrics">
+          <p className="spLyricBig">As they come, as they come</p>
+          <p className="spLyricBig">And I couldn't help but fall in love again</p>
+          <p className="spLyricBig spLyricMuted">No, I couldn't help but fall in love again</p>
+          <p className="spLyricBig spLyricMuted">I saw it glitter as I grew</p>
+        </div>
+
+        <div className="spDivider" />
+
+        <div className="spRelated">
+          <div className="spRelatedTitle">Related music videos</div>
+          <div className="spRelatedGrid">
+            <div className="spCard" />
+            <div className="spCard" />
+            <div className="spCard" />
+          </div>
+        </div>
+
+        <div style={{ height: 700 }} />
+      </motion.section>
     </div>
   );
 }
