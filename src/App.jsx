@@ -1,98 +1,110 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+// App.jsx
+import React from "react";
+import "./styles.css";
 
 export default function App() {
-  const pageRef = useRef(null);
-
-  const { scrollYProgress } = useScroll({
-    target: pageRef,
-    offset: ["start start", "end end"],
-  });
-
-  // Background transitions
-  const bgScale = useTransform(scrollYProgress, [0, 0.35], [1.06, 1.0]);
-  const bgDim = useTransform(scrollYProgress, [0, 0.35], [0.10, 0.65]);
-  const bgBlurPx = useTransform(scrollYProgress, [0, 0.35], [0, 22]);
-  const bgBlur = useTransform(bgBlurPx, (v) => `blur(${v}px)`);
-  const bgSat = useTransform(scrollYProgress, [0, 0.35], [1.25, 0.85]);
-  const bgCont = useTransform(scrollYProgress, [0, 0.35], [1.05, 1.0]);
-  const bgFilter = useTransform([bgSat, bgCont], ([s, c]) => `saturate(${s}) contrast(${c})`);
-
-  // Hero transitions
-  const heroY = useTransform(scrollYProgress, [0, 0.25], [0, -18]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0.65]);
-
-  // Sheet rise
-  const sheetY = useTransform(scrollYProgress, [0, 0.25], [220, 0]);
-
   const artworkUrl =
     "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1600&q=80&auto=format&fit=crop";
 
   return (
-    <div ref={pageRef} className="spPage">
-      {/* Fixed background artwork */}
-      <motion.div
-        className="spBg"
-        style={{
-          backgroundImage: `url(${artworkUrl})`,
-          scale: bgScale,
-          filter: bgFilter,
-        }}
-        aria-hidden="true"
-      />
+    <div className="page">
+      {/* HERO (artwork ONLY exists in this section) */}
+      <section className="hero" style={{ backgroundImage: `url(${artworkUrl})` }}>
+        {/* dark overlay so text is readable on light artwork */}
+        <div className="heroOverlay" />
 
-      {/* Blur & dim overlays */}
-      <motion.div className="spBgBlur" style={{ filter: bgBlur }} aria-hidden="true" />
-      <motion.div className="spBgDim" style={{ opacity: bgDim }} aria-hidden="true" />
-
-      {/* Hero content (no controls, no top bar) */}
-      <section className="spHero">
-        <motion.div className="spHeroInner" style={{ y: heroY, opacity: heroOpacity }}>
-          <div className="spLyricLine">Your face against the trees</div>
-
-          <div className="spTrackRow">
-            <img className="spThumb" src={artworkUrl} alt="" />
-            <div className="spTrackMeta">
-              <div className="spTrackTitle">Saw Your Face Today</div>
-              <div className="spTrackArtist">She &amp; Him</div>
-            </div>
-            <div className="spCheck">✓</div>
+        {/* top bar (optional, simple) */}
+        <div className="topBar">
+          <button className="iconBtn" aria-label="Back">
+            ⌄
+          </button>
+          <div className="topBarText">
+            <div className="topKicker">PLAYING FROM SEARCH</div>
+            <div className="topTitle">"titik" in Search</div>
           </div>
-        </motion.div>
+          <button className="iconBtn" aria-label="Menu">
+            ⋮
+          </button>
+        </div>
+
+        {/* hero content */}
+        <div className="heroContent">
+          <div className="lyricLine">—titik di ujung doa</div>
+
+          <div className="trackRow">
+            <img className="thumb" src={artworkUrl} alt="" />
+            <div className="trackMeta">
+              <div className="trackTitle">Ada titik-titik di ujung doa</div>
+              <div className="trackArtist">Sal Priadi</div>
+            </div>
+            <button className="plusBtn" aria-label="Add">
+              +
+            </button>
+          </div>
+
+          <div className="progress">
+            <div className="progressTrack">
+              <div className="progressDot" />
+            </div>
+            <div className="times">
+              <span>2:18</span>
+              <span>5:05</span>
+            </div>
+          </div>
+
+          {/* Minimal controls (optional). Remove if you want. */}
+          <div className="controls">
+            <button className="iconBtn" aria-label="Prev">
+              ⟨⟨
+            </button>
+            <button className="playBtn" aria-label="Pause">
+              ▌▌
+            </button>
+            <button className="iconBtn" aria-label="Next">
+              ⟩⟩
+            </button>
+          </div>
+        </div>
+
+        {/* fade-to-dark at bottom so transition feels like Spotify */}
+        <div className="heroFadeToDark" />
       </section>
 
-      {/* Lyrics sheet */}
-      <motion.section className="spSheet" style={{ y: sheetY }}>
-        <div className="spHandle" />
+      {/* CONTENT (normal scroll on dark background) */}
+      <main className="content">
+        <h2 className="sectionTitle">Related Track</h2>
 
-        <div className="spSheetHeader">
-          <div className="spSheetTitle">Lyrics</div>
-          <div className="spSheetHeaderBtns">
-            <button className="spRoundBtn" aria-label="Share lyrics">⤴</button>
-            <button className="spRoundBtn" aria-label="Expand">⤢</button>
+        <div className="relatedCard">
+          <div className="relatedThumb" />
+          <div className="relatedText">
+            <div className="relatedTitle">Ada Titik-Titik Di</div>
+            <div className="relatedSub">Song • Live performance</div>
           </div>
+          <button className="plusBtn small" aria-label="Add">
+            +
+          </button>
         </div>
 
-        <div className="spLyrics">
-          <p className="spLyricBig">As they come, as they come</p>
-          <p className="spLyricBig">And I couldn't help but fall in love again</p>
-          <p className="spLyricBig spLyricMuted">No, I couldn't help but fall in love again</p>
-          <p className="spLyricBig spLyricMuted">I saw it glitter as I grew</p>
-        </div>
-
-        <div className="spDivider" />
-
-        <div className="spRelated">
-          <div className="spRelatedTitle">Related music videos</div>
-          <div className="spRelatedGrid">
-            <div className="spCard" />
-            <div className="spCard" />
-            <div className="spCard" />
+        <div className="lyricsCard">
+          <div className="lyricsHeader">
+            <div className="lyricsTitle">Lyrics</div>
+            <div className="lyricsBtns">
+              <button className="roundBtn" aria-label="Share">
+                ⤴
+              </button>
+              <button className="roundBtn" aria-label="Expand">
+                ⤢
+              </button>
+            </div>
           </div>
+
+          <p className="lyricsText">Kucoba memaafkanmu selalu</p>
+          <p className="lyricsText">Kalau di situ ada salahku</p>
+          <p className="lyricsText">Maafkan ku juga</p>
         </div>
 
-        <div style={{ height: 700 }} />
-      </motion.section>
+        <div className="spacer" />
+      </main>
     </div>
   );
 }
