@@ -4,37 +4,30 @@ import { motion, useScroll, useTransform } from "framer-motion";
 export default function App() {
   const heroRef = useRef(null);
 
-  // Scroll progress ONLY for the hero section
-  // 0 = hero top at top of screen
-  // 1 = hero bottom hits top of screen (hero is leaving)
+  // Progress only while hero is leaving the screen
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
 
-  // Artwork fades OUT as hero leaves
+  // Artwork fades out as hero scrolls away
   const artOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 0.55, 0]);
 
-  // Dark overlay increases so it transitions to dark page
-  const overlayOpacity = useTransform(scrollYProgress, [0, 1], [0.2, 1]);
-
-  // Optional blur (Spotify-ish)
-  const blurPx = useTransform(scrollYProgress, [0, 1], [0, 16]);
-  const blurFilter = useTransform(blurPx, (v) => `blur(${v}px)`);
+  // Dark overlay increases so background becomes fully dark
+  const overlayOpacity = useTransform(scrollYProgress, [0, 1], [0.15, 1]);
 
   const artworkUrl =
     "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1600&q=80&auto=format&fit=crop";
 
   return (
     <div className="page">
-      {/* SECTION 1: HERO (artwork + player UI) — scrolls away together */}
+      {/* SECTION 1: HERO (scrolls away together) */}
       <section ref={heroRef} className="hero">
-        {/* Artwork background INSIDE hero (not fixed) */}
+        {/* Artwork inside hero (not fixed, no blur) */}
         <motion.div
           className="heroArtwork"
           style={{
             opacity: artOpacity,
-            filter: blurFilter,
             backgroundImage: `url(${artworkUrl})`,
           }}
           aria-hidden="true"
@@ -47,20 +40,21 @@ export default function App() {
           aria-hidden="true"
         />
 
-        {/* Player UI content (part of the hero section) */}
         <div className="heroContent">
           <div className="heroTopMeta">
             <div className="kicker">PLAYING FROM SEARCH</div>
-            <div className="subKicker">"titik" in Search</div>
+            <div className="subKicker">Recent Searches</div>
           </div>
+
+          <div className="lyricLine">Your face against the trees</div>
 
           <div className="trackRow">
             <img className="thumb" src={artworkUrl} alt="" />
             <div className="trackMeta">
-              <div className="trackTitle">titik di ujung doa</div>
-              <div className="trackArtist">Sal Priadi</div>
+              <div className="trackTitle">Saw Your Face Today</div>
+              <div className="trackArtist">She &amp; Him</div>
             </div>
-            <div className="plusBtn">+</div>
+            <div className="checkBadge">✓</div>
           </div>
 
           <div className="progressRow">
@@ -68,11 +62,12 @@ export default function App() {
               <div className="progressDot" />
             </div>
             <div className="times">
-              <span>2:18</span>
-              <span>5:05</span>
+              <span>0:08</span>
+              <span>2:50</span>
             </div>
           </div>
 
+          {/* Controls (visual only, like Spotify layout) */}
           <div className="controlsRow">
             <div className="ctl" />
             <div className="ctl" />
@@ -80,41 +75,27 @@ export default function App() {
             <div className="ctl" />
             <div className="ctl" />
           </div>
-
-          {/* Hint of next section like Spotify */}
-          <div className="peekTitle">Related Track</div>
         </div>
       </section>
 
-      {/* SECTION 2: normal dark page */}
+      {/* SECTION 2+: Dark page sections (normal scroll) */}
       <main className="sections">
-        <section className="sectionCard">
-          <h3 className="sectionTitle">Related Track</h3>
-          <div className="relatedCard">
-            <div className="relatedThumb" />
-            <div className="relatedInfo">
-              <div className="relatedName">Ada Titik-Titik Di</div>
-              <div className="relatedDesc">
-                Song • Ada Titik-Titik Di Ujung Doa (Live Performance)
-              </div>
-            </div>
-            <div className="relatedPlus">+</div>
+        {/* Lyrics peek bar (always visible initially) */}
+        <section className="peekBar">
+          <div className="peekTitle">Lyrics</div>
+          <div className="peekBtns">
+            <button className="peekBtn" aria-label="Share">⤴</button>
+            <button className="peekBtn" aria-label="Expand">⤢</button>
           </div>
         </section>
 
+        {/* Example sections */}
         <section className="sectionCard">
-          <div className="lyricsHeader">
-            <h3 className="sectionTitle">Lyrics</h3>
-            <div className="lyricsBtns">
-              <button className="roundBtn" aria-label="Share">⤴</button>
-              <button className="roundBtn" aria-label="Expand">⤢</button>
-            </div>
-          </div>
-
+          <h3 className="sectionTitle">Lyrics</h3>
           <div className="lyricsCard">
-            <p className="lyricBig">Kucoba memaafkanmu selalu</p>
-            <p className="lyricBig">Kalau di situ ada salahku</p>
-            <p className="lyricBig">Maafkan ku juga</p>
+            <p className="lyricBig">As they come, as they come</p>
+            <p className="lyricBig">And I couldn't help but fall in love again</p>
+            <p className="lyricBig lyricMuted">No, I couldn't help but fall in love again</p>
             <p className="lyricSmall">♪</p>
           </div>
         </section>
