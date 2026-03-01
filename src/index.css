@@ -1,102 +1,137 @@
-* { box-sizing: border-box; }
-html, body {
-  margin: 0;
-  padding: 0;
+/* ===============================
+   RESET & BASE
+================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
+html,
 body {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
   background: #0b0b0f;
-  color: rgba(255,255,255,0.92);
+  color: rgba(255, 255, 255, 0.92);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Inter, Arial, sans-serif;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ===============================
+   PAGE WRAPPER
+================================ */
+.page {
+  position: relative;
+  width: 100%;
   overflow-x: hidden;
 }
 
-/* ===== HERO ===== */
+/* ===============================
+   HERO (FIRST SCREEN ONLY)
+================================ */
 .hero {
   position: relative;
+  height: 100vh; /* exactly first visible screen */
+  min-height: 100vh;
   width: 100%;
   overflow: hidden;
+  z-index: 1; /* BACK layer */
 }
 
-/* Use real image instead of background-image */
-.heroImage {
+/* Background image */
+.heroBg {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translateZ(0);
 }
 
-/* Static overlay for readability */
+/* Dark gradient overlay (Spotify-like) */
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(0,0,0,0.1),
-      rgba(0,0,0,0.25) 55%,
-      rgba(0,0,0,0.65) 100%
-    );
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.45) 60%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
 }
 
-/* Content placement */
+/* Hero content (title + subtitle) */
 .heroContent {
-  position: relative;
-  height: 100%;
-  max-width: 560px;
-  margin: 0 auto;
-
-  display: grid;
-  align-content: end;
-
-  padding: 24px 16px 140px;
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 88px; /* lifted up like Spotify */
+  z-index: 3;
 }
 
 .heroTitle {
-  margin: 0;
-  font-size: 34px;
-  font-weight: 900;
-  line-height: 1.1;
-}
-
-.heroDesc {
-  margin-top: 8px;
-  font-size: 14px;
-  opacity: 0.82;
-  max-width: 52ch;
-}
-
-/* ===== SURFACE ===== */
-.surface {
-  background: #0b0b0f;
-  margin-top: -72px; /* Spotify-like peek */
-  padding: 0 16px 16px;
-}
-
-/* ===== CARDS ===== */
-.card {
-  margin-top: 16px;
-  padding: 18px;
-  background: rgba(20,20,24,0.95);
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-}
-
-.cardHeader {
   margin: 0 0 8px;
+  font-size: 34px;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.heroSubtitle {
+  margin: 0;
+  max-width: 520px;
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+/* ===============================
+   SURFACE (SCROLL CONTENT)
+================================ */
+.surface {
+  position: relative;
+  z-index: 5; /* ABOVE hero */
+  margin-top: -72px; /* section peek into hero */
+  padding-bottom: 64px;
+}
+
+/* ===============================
+   CARDS
+================================ */
+.card {
+  position: relative;
+  z-index: 6; /* safety layer */
+  margin: 0 16px 16px;
+  padding: 18px 18px 20px;
+  background: rgba(20, 20, 26, 0.95);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* Card header (FIXES HIDDEN TITLE BUG) */
+.cardHeader {
+  display: block;
+  margin: 0 0 12px;
   font-size: 16px;
   font-weight: 900;
+  color: rgba(255, 255, 255, 0.95);
 }
 
+/* Card body text */
 .cardText {
   margin: 0;
   font-size: 14px;
-  opacity: 0.82;
-  line-height: 1.55;
+  line-height: 1.65;
+  opacity: 0.85;
 }
 
-@media (max-width: 420px) {
-  .heroTitle { font-size: 30px; }
+/* ===============================
+   OPTIONAL: EXTRA SPACING
+================================ */
+.card + .card {
+  margin-top: 16px;
 }
