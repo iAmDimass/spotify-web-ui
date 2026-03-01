@@ -1,109 +1,96 @@
 // App.jsx
-import React from "react";
-import "./styles.css";
+// Spotify-like "hero artwork only" + normal dark content scroll
+// No music controls, no sticky header.
+
+import { useMemo } from "react";
 
 export default function App() {
-  const artworkUrl =
-    "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1600&q=80&auto=format&fit=crop";
+  const artworkUrl = useMemo(
+    () =>
+      "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1600&q=80&auto=format&fit=crop",
+    []
+  );
 
   return (
-    <div className="page">
-      {/* HERO (artwork ONLY exists in this section) */}
-      <section className="hero" style={{ backgroundImage: `url(${artworkUrl})` }}>
-        {/* dark overlay so text is readable on light artwork */}
-        <div className="heroOverlay" />
+    <div className="spPage">
+      {/* HERO: artwork exists ONLY in this section height */}
+      <section
+        className="spHero"
+        style={{ backgroundImage: `url(${artworkUrl})` }}
+      >
+        {/* Dark overlay so white artwork stays readable */}
+        <div className="spHeroOverlay" />
 
-        {/* top bar (optional, simple) */}
-        <div className="topBar">
-          <button className="iconBtn" aria-label="Back">
-            ⌄
-          </button>
-          <div className="topBarText">
-            <div className="topKicker">PLAYING FROM SEARCH</div>
-            <div className="topTitle">"titik" in Search</div>
-          </div>
-          <button className="iconBtn" aria-label="Menu">
-            ⋮
-          </button>
-        </div>
+        {/* Hero content */}
+        <div className="spHeroInner">
+          <div className="spHeroKicker">PLAYING FROM SEARCH</div>
+          <div className="spHeroSub">"titik" in Search</div>
 
-        {/* hero content */}
-        <div className="heroContent">
-          <div className="lyricLine">—titik di ujung doa</div>
-
-          <div className="trackRow">
-            <img className="thumb" src={artworkUrl} alt="" />
-            <div className="trackMeta">
-              <div className="trackTitle">Ada titik-titik di ujung doa</div>
-              <div className="trackArtist">Sal Priadi</div>
+          <div className="spTrackRow">
+            <img className="spThumb" src={artworkUrl} alt="Album art" />
+            <div className="spTrackMeta">
+              <div className="spTrackTitle">titik di ujung doa</div>
+              <div className="spTrackArtist">Sal Priadi</div>
             </div>
-            <button className="plusBtn" aria-label="Add">
+            <button className="spAddBtn" aria-label="Add">
               +
             </button>
           </div>
 
-          <div className="progress">
-            <div className="progressTrack">
-              <div className="progressDot" />
+          <div className="spProgress">
+            <div className="spProgressBar">
+              <div className="spProgressFill" />
+              <div className="spProgressDot" />
             </div>
-            <div className="times">
+            <div className="spTimes">
               <span>2:18</span>
               <span>5:05</span>
             </div>
           </div>
-
-          {/* Minimal controls (optional). Remove if you want. */}
-          <div className="controls">
-            <button className="iconBtn" aria-label="Prev">
-              ⟨⟨
-            </button>
-            <button className="playBtn" aria-label="Pause">
-              ▌▌
-            </button>
-            <button className="iconBtn" aria-label="Next">
-              ⟩⟩
-            </button>
-          </div>
         </div>
 
-        {/* fade-to-dark at bottom so transition feels like Spotify */}
-        <div className="heroFadeToDark" />
+        {/* Gradient fade to dark at bottom, hides the "cut" like Spotify */}
+        <div className="spHeroFade" />
       </section>
 
-      {/* CONTENT (normal scroll on dark background) */}
-      <main className="content">
-        <h2 className="sectionTitle">Related Track</h2>
+      {/* CONTENT: normal scroll on dark background */}
+      <main className="spContent">
+        <h2 className="spSectionTitle">Related Track</h2>
 
-        <div className="relatedCard">
-          <div className="relatedThumb" />
-          <div className="relatedText">
-            <div className="relatedTitle">Ada Titik-Titik Di</div>
-            <div className="relatedSub">Song • Live performance</div>
+        <div className="spRelatedCard">
+          <div className="spRelatedThumb" />
+          <div className="spRelatedText">
+            <div className="spRelatedTitle">Ada Titik-Titik Di</div>
+            <div className="spRelatedSub">
+              Song • Ada Titik-Titik Di Ujung Doa (Live Performance)
+            </div>
           </div>
-          <button className="plusBtn small" aria-label="Add">
+          <button className="spAddSmall" aria-label="Add related">
             +
           </button>
         </div>
 
-        <div className="lyricsCard">
-          <div className="lyricsHeader">
-            <div className="lyricsTitle">Lyrics</div>
-            <div className="lyricsBtns">
-              <button className="roundBtn" aria-label="Share">
+        {/* Lyrics card (like Spotify orange block) */}
+        <section className="spLyricsCard">
+          <div className="spLyricsHeader">
+            <div className="spLyricsLabel">Lyrics</div>
+            <div className="spLyricsBtns">
+              <button className="spRoundBtn" aria-label="Share lyrics">
                 ⤴
               </button>
-              <button className="roundBtn" aria-label="Expand">
+              <button className="spRoundBtn" aria-label="Expand lyrics">
                 ⤢
               </button>
             </div>
           </div>
 
-          <p className="lyricsText">Kucoba memaafkanmu selalu</p>
-          <p className="lyricsText">Kalau di situ ada salahku</p>
-          <p className="lyricsText">Maafkan ku juga</p>
-        </div>
+          <p className="spLyricsLine">Kucoba memaafkanmu selalu</p>
+          <p className="spLyricsLine">Kalau di situ ada salahku</p>
+          <p className="spLyricsLine">Maafkan ku juga</p>
+        </section>
 
-        <div className="spacer" />
+        {/* Add more content so you can scroll like the app */}
+        <div style={{ height: 900 }} />
       </main>
     </div>
   );
