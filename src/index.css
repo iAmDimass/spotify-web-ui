@@ -1,8 +1,5 @@
 * { box-sizing: border-box; }
-html, body {
-  margin: 0;
-  padding: 0;
-}
+html, body { margin: 0; padding: 0; }
 
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -18,7 +15,7 @@ body {
   overflow: hidden;
 }
 
-/* Use real image instead of background-image */
+/* Use real <img> so it fills the locked pixel height */
 .heroImage {
   position: absolute;
   inset: 0;
@@ -27,20 +24,23 @@ body {
   object-fit: cover;
 }
 
-/* Static overlay for readability */
 .heroOverlay {
   position: absolute;
   inset: 0;
   background:
     linear-gradient(
       to bottom,
-      rgba(0,0,0,0.1),
+      rgba(0,0,0,0.10),
       rgba(0,0,0,0.25) 55%,
       rgba(0,0,0,0.65) 100%
     );
+  pointer-events: none;
 }
 
-/* Content placement */
+/* ✅ Safe-area insets:
+   - adds padding for notch/top
+   - adds padding for home indicator/bottom
+*/
 .heroContent {
   position: relative;
   height: 100%;
@@ -49,8 +49,16 @@ body {
 
   display: grid;
   align-content: end;
+  gap: 10px;
 
-  padding: 24px 16px 140px;
+  padding-left: calc(16px + env(safe-area-inset-left));
+  padding-right: calc(16px + env(safe-area-inset-right));
+
+  /* top safe area matters if you later move content up */
+  padding-top: calc(24px + env(safe-area-inset-top));
+
+  /* bottom safe area matters a lot on iPhone */
+  padding-bottom: calc(140px + env(safe-area-inset-bottom));
 }
 
 .heroTitle {
@@ -58,26 +66,41 @@ body {
   font-size: 34px;
   font-weight: 900;
   line-height: 1.1;
+  text-shadow: 0 10px 40px rgba(0,0,0,0.55);
 }
 
 .heroDesc {
-  margin-top: 8px;
+  margin: 0;
   font-size: 14px;
   opacity: 0.82;
+  line-height: 1.45;
   max-width: 52ch;
 }
 
 /* ===== SURFACE ===== */
-.surface {
-  background: #0b0b0f;
-  margin-top: -72px; /* Spotify-like peek */
-  padding: 0 16px 16px;
+:root {
+  --peek: 72px;
 }
 
-/* ===== CARDS ===== */
+.surface {
+  position: relative;
+  z-index: 2;
+
+  background: #0b0b0f;
+
+  /* Spotify-like peek */
+  margin-top: calc(-1 * var(--peek));
+
+  padding-left: calc(16px + env(safe-area-inset-left));
+  padding-right: calc(16px + env(safe-area-inset-right));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+
+/* Cards */
 .card {
   margin-top: 16px;
   padding: 18px;
+
   background: rgba(20,20,24,0.95);
   border-radius: 18px;
   border: 1px solid rgba(255,255,255,0.06);
@@ -97,6 +120,14 @@ body {
   line-height: 1.55;
 }
 
+.link {
+  color: rgba(255,255,255,0.92);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.25);
+  padding-bottom: 2px;
+}
+
 @media (max-width: 420px) {
   .heroTitle { font-size: 30px; }
+  :root { --peek: 64px; }
 }
