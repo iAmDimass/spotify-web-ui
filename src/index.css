@@ -12,8 +12,7 @@ body {
 .hero {
   position: relative;
 
-  /* Mobile browser URL bar behavior:
-     svh = viewport when bars are visible (first load) */
+  /* KEY FIX: match "first open" visible screen (URL bar visible) */
   height: 100svh;
   height: 100vh; /* fallback */
 
@@ -23,7 +22,6 @@ body {
   background-color: #0b0b0f;
 }
 
-/* Static overlay for readability (NOT animated) */
 .heroOverlay {
   position: absolute;
   inset: 0;
@@ -33,7 +31,6 @@ body {
   pointer-events: none;
 }
 
-/* Title block position (lower-third, not too bottom) */
 .heroContent {
   position: relative;
   height: 100%;
@@ -43,6 +40,7 @@ body {
   display: grid;
   align-content: end;
 
+  /* lower-third placement */
   padding: 24px 16px clamp(110px, 18svh, 180px);
   gap: 10px;
 }
@@ -63,65 +61,65 @@ body {
   max-width: 52ch;
 }
 
-/* ===== SECTIONS ===== */
+/* ===== SURFACE (Spotify-like layer) ===== */
 :root {
-  --peek: 64px;       /* how much the first header peeks into hero */
-  --headerH: 56px;    /* reserved space for header height (prevents jump) */
+  --peek: 72px; /* how much the surface overlaps into hero */
 }
 
-.sections {
+.surface {
+  position: relative;
+  z-index: 2;
+
   background: #0b0b0f;
+
+  /* This is the clean peek:
+     the WHOLE surface moves up slightly, not detached header */
+  margin-top: calc(-1 * var(--peek));
   padding: 0 16px 16px;
 }
 
-/* Each section */
-.section {
+/* optional: soften the transition edge */
+.surface::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  top: 0;
+  height: 28px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0));
+  pointer-events: none;
+}
+
+/* ===== CARDS ===== */
+.card {
   margin-top: 16px;
-}
+  border-radius: 18px;
+  overflow: hidden;
 
-/* Header strip */
-.sectionHeader {
-  font-size: 16px;
-  font-weight: 900;
-  padding: 14px 16px;
   background: rgba(20,20,24,0.95);
   border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 18px 18px 0 0;
-}
-
-/* Card */
-.sectionCard {
-  padding: 16px;
-  background: rgba(20,20,24,0.95);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-top: none;
-  border-radius: 0 0 18px 18px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.35);
 }
 
-.sectionText {
+.cardHeader {
+  font-size: 16px;
+  font-weight: 900;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.cardBody {
+  padding: 16px;
+}
+
+.cardText {
   margin: 0;
   font-size: 14px;
   opacity: 0.82;
   line-height: 1.55;
 }
 
-/* ===== PEEK LOGIC (only first section uses .hasPeek + .peek) ===== */
-.section.hasPeek {
-  position: relative;
-  padding-top: var(--headerH); /* reserve space so the card stays clean */
-}
-
-.sectionHeader.peek {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(-1 * var(--peek));
-  z-index: 3;
-}
-
 /* Mobile tweaks */
 @media (max-width: 420px) {
   .heroTitle { font-size: 30px; }
-  :root { --peek: 56px; --headerH: 52px; }
+  :root { --peek: 64px; }
 }
