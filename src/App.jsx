@@ -4,90 +4,62 @@ export default function App() {
 
   return (
     <div className="page">
-      {/* SECTION 1: HERO (artwork + player UI) — scrolls away normally */}
+      {/* SECTION 1: HERO (opening section) */}
       <section
         className="hero"
         style={{ backgroundImage: `url(${artworkUrl})` }}
       >
+        {/* Static overlay only for readability (NOT animated) */}
         <div className="heroOverlay" aria-hidden="true" />
 
         <div className="heroContent">
-          <div className="heroTopMeta">
-            <div className="kicker">PLAYING FROM SEARCH</div>
-            <div className="subKicker">Recent Searches</div>
-          </div>
-
-          <div className="lyricLine">Your face against the trees</div>
-
-          <div className="trackRow">
-            <img className="thumb" src={artworkUrl} alt="" />
-            <div className="trackMeta">
-              <div className="trackTitle">Saw Your Face Today</div>
-              <div className="trackArtist">She &amp; Him</div>
-            </div>
-            <div className="checkBadge" aria-label="Saved">
-              ✓
-            </div>
-          </div>
-
-          <div className="progressRow">
-            <div className="progressTrack">
-              <div className="progressDot" />
-            </div>
-            <div className="times">
-              <span>0:08</span>
-              <span>2:50</span>
-            </div>
-          </div>
-
-          {/* Controls (visual only) */}
-          <div className="controlsRow" aria-hidden="true">
-            <div className="ctl" />
-            <div className="ctl" />
-            <div className="playBtn" />
-            <div className="ctl" />
-            <div className="ctl" />
+          <div className="heroTitle">Discover New Experiences</div>
+          <div className="heroDesc">
+            A simple hero section with a background artwork. Scroll down to see
+            more sections below.
           </div>
         </div>
       </section>
 
-      {/* SECTION 2+: normal dark page (lyrics peek shown by layout) */}
+      {/* SECTION 2-5: normal content sections */}
       <main className="sections">
-        {/* Peek bar (visible immediately) */}
-        <section className="peekBar">
-          <div className="peekTitle">Lyrics</div>
-          <div className="peekBtns">
-            <button className="peekBtn" aria-label="Share">
-              ⤴
-            </button>
-            <button className="peekBtn" aria-label="Expand">
-              ⤢
-            </button>
-          </div>
+        <section className="sectionCard">
+          <h3 className="sectionTitle">Overview</h3>
+          <p className="sectionText">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+            ullamcorper, velit nec pharetra tincidunt, augue risus ultrices
+            nisi, vitae posuere neque purus sed elit.
+          </p>
         </section>
 
         <section className="sectionCard">
-          <h3 className="sectionTitle">Lyrics</h3>
-          <div className="lyricsCard">
-            <p className="lyricBig">As they come, as they come</p>
-            <p className="lyricBig">And I couldn't help but fall in love again</p>
-            <p className="lyricBig lyricMuted">
-              No, I couldn't help but fall in love again
-            </p>
-            <p className="lyricSmall">♪</p>
-          </div>
+          <h3 className="sectionTitle">Details</h3>
+          <p className="sectionText">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
+            eget erat non leo posuere interdum. Integer non justo sed orci
+            feugiat ultricies.
+          </p>
         </section>
 
         <section className="sectionCard">
-          <h3 className="sectionTitle">Related</h3>
-          <div className="grid">
-            <div className="tile" />
-            <div className="tile" />
-            <div className="tile" />
-          </div>
+          <h3 className="sectionTitle">Features</h3>
+          <p className="sectionText">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+            eleifend, nibh vitae vulputate vulputate, massa arcu luctus justo,
+            sit amet luctus enim erat sed mi.
+          </p>
         </section>
 
-        <div style={{ height: 900 }} />
+        <section className="sectionCard">
+          <h3 className="sectionTitle">More Information</h3>
+          <p className="sectionText">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
+            erat volutpat. Donec ac felis id libero tincidunt consequat. Duis
+            non ex in justo elementum volutpat.
+          </p>
+        </section>
+
+        <div style={{ height: 700 }} />
       </main>
     </div>
   );
