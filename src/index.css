@@ -1,4 +1,5 @@
-.page {
+/* Page / surface */
+.spPage {
   min-height: 220vh;
   background: #0b0b0f;
   color: rgba(255,255,255,0.92);
@@ -6,138 +7,130 @@
   overflow-x: hidden;
 }
 
-/* ---- COVER TOP REGION (Spotify-like) ---- */
-.coverRegion {
+.spSurface {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 62vh;          /* 🔥 this creates the “half screen cover” */
+  inset: 0;
+  background: #0b0b0f;
   z-index: 0;
+}
+
+/**
+ * HERO = the CLIPPED WINDOW
+ * - sticky so it stays at top while collapsing
+ * - overflow hidden so image gets cropped
+ */
+.spHero {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   overflow: hidden;
 }
 
-/* The cover image itself */
-.coverImg {
+/**
+ * The image does NOT scale.
+ * It stays "painted" behind the hero window.
+ * Use top/center anchoring to match Spotify’s upward-cropping feel.
+ */
+.spHeroImg {
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center;
+  background-position: top center; /* KEY: makes it feel like Spotify */
   transform: translateZ(0);
-  will-change: transform, filter;
+  will-change: filter;
 }
 
-/* Blur overlay layer (optional, helps premium feel) */
-.coverBlur {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.001);
-  backdrop-filter: blur(0px);
-  pointer-events: none;
-}
-
-/* This fades the cover into dark near the bottom like Spotify */
-.coverFadeToDark {
+/* Soft fade so hero blends into dark surface */
+.spHeroFade {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background: linear-gradient(
     to bottom,
-    rgba(0,0,0,0.0) 10%,
-    rgba(0,0,0,0.15) 55%,
-    rgba(0,0,0,0.85) 100%
+    rgba(0,0,0,0.00) 0%,
+    rgba(0,0,0,0.10) 55%,
+    rgba(11,11,15,0.92) 100%
   );
 }
 
-/* ---- DARK SURFACE (Spotify bottom background) ---- */
-.surface {
-  position: fixed;
+/* Optional dim overlay (keeps text readable) */
+.spHeroDim {
+  position: absolute;
   inset: 0;
-  background: #0b0b0f;
-  z-index: 1;
+  background: rgba(0,0,0,1);
   pointer-events: none;
-  opacity: 0.35; /* will animate */
+  opacity: 0.1;
 }
 
-/* Foreground hero content (optional) */
-.hero {
+/* Foreground content in hero */
+.spHeroContent {
   position: relative;
-  z-index: 5;
-  padding: 24px 16px;
-  padding-top: 42vh; /* so content sits inside the cover region */
+  z-index: 2;
+  padding: 20px 16px 18px;
+  text-shadow: 0 10px 40px rgba(0,0,0,0.6);
 }
 
-.trackRow {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: 12px;
-  align-items: center;
-  width: min(420px, 92vw);
+.spKicker {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  margin-bottom: 10px;
 }
 
-.thumb {
-  width: 56px;
-  height: 56px;
-  border-radius: 10px;
-  object-fit: cover;
+.spTitle {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.05;
 }
 
-.trackTitle {
-  font-size: 20px;
-  font-weight: 800;
-}
-.trackArtist {
+.spArtist {
+  margin-top: 6px;
   font-size: 14px;
   opacity: 0.75;
 }
 
-/* ---- SHEET ---- */
-.sheet {
+/* Body content sits on dark surface (like Spotify) */
+.spBody {
   position: relative;
-  z-index: 10;
-
-  margin-top: 55vh; /* 🔥 sheet starts around where cover ends */
-  padding: 12px 16px 30px;
-  background: rgba(12,12,16,0.92);
-  backdrop-filter: blur(16px);
-  border-top-left-radius: 22px;
-  border-top-right-radius: 22px;
-  border-top: 1px solid rgba(255,255,255,0.06);
+  z-index: 20;
+  padding: 14px 16px 40px;
 }
 
-.sheetHandle {
-  width: 44px;
-  height: 5px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.18);
-  margin: 4px auto 12px;
+/* Sections */
+.spSection {
+  margin-top: 14px;
 }
 
-.block { padding: 12px 0; }
-
-.h2 {
+.spSection h3 {
   font-size: 16px;
   font-weight: 800;
-  margin-bottom: 10px;
+  margin: 18px 0 10px;
+  opacity: 0.92;
 }
 
-.card {
+.spCard {
   height: 86px;
   border-radius: 16px;
   border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.06);
 }
 
-.lyricsCard {
-  margin-top: 10px;
-  padding: 16px 16px 18px;
+/* Lyrics card */
+.spLyricsCard {
   border-radius: 18px;
-  background: rgba(180, 90, 20, 0.8);
+  padding: 16px;
+  background: rgba(180, 90, 20, 0.80);
+  border: 1px solid rgba(255,255,255,0.10);
 }
 
-.lyricBig {
-  font-size: 34px;
+.spLyricsCard p {
+  margin: 0 0 14px;
+  font-size: 28px;
   line-height: 1.08;
   font-weight: 900;
-  margin: 0 0 18px;
+}
+
+@media (max-width: 420px) {
+  .spTitle { font-size: 22px; }
+  .spLyricsCard p { font-size: 26px; }
 }
