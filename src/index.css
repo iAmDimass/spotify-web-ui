@@ -1,83 +1,72 @@
-/* Reset */
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: #0b0b0f;
+  background: #0b0b0f; /* main background always dark */
   color: rgba(255,255,255,0.92);
   overflow-x: hidden;
 }
 
-/* Scroll container */
-.pageScroll {
-  height: 100vh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+.page {
+  min-height: 200vh;
 }
 
-/* Base wrapper */
-.pageBase {
-  min-height: 240vh;
+/* =========================
+   SECTION 1 (Hero)
+   This whole block scrolls away together
+========================= */
+.hero {
   position: relative;
+  height: 100vh;          /* <- artwork section height limit */
+  overflow: hidden;
+  background: #0b0b0f;    /* fallback */
 }
 
-/* Always-present dark base background */
-.baseDark {
-  position: fixed;
-  inset: 0;
-  background: #0b0b0f;
-  z-index: 0;
-}
-
-/* Artwork layer (limited to hero experience by fading out) */
-.artLayer {
-  position: fixed;
+/* Artwork background inside hero (NOT fixed) */
+.heroArtwork {
+  position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
-  z-index: 1;
+  z-index: 0;
   will-change: opacity, filter;
 }
 
-/* Dark overlay ramps up, making lower page fully dark */
-.darkOverlay {
-  position: fixed;
+/* Dark overlay inside hero */
+.heroOverlay {
+  position: absolute;
   inset: 0;
   background:
-    radial-gradient(900px 700px at 50% 35%, rgba(0,0,0,0.00), rgba(0,0,0,0.25) 55%, rgba(0,0,0,0.75) 100%),
-    linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.95) 100%);
-  z-index: 2;
+    radial-gradient(900px 700px at 50% 30%, rgba(0,0,0,0.00), rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.85) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.95) 100%);
+  z-index: 1;
   pointer-events: none;
   will-change: opacity;
 }
 
-/* HERO: height limit zone */
-.hero {
+/* UI content is part of hero section */
+.heroContent {
   position: relative;
-  z-index: 10;
-  min-height: 100vh; /* <-- THIS is the artwork section height limit */
+  z-index: 2;
+  height: 100%;
+  padding: 18px 16px 22px;
   display: grid;
-  align-items: end;
-  padding: 18px 16px 24px;
-}
-
-.heroInner {
+  align-content: end;
+  gap: 14px;
   width: min(520px, 94vw);
   margin: 0 auto;
 }
 
 .heroTopMeta {
   text-align: center;
-  margin-bottom: 18px;
   opacity: 0.9;
 }
-
 .kicker {
   font-size: 12px;
   letter-spacing: 0.08em;
   opacity: 0.75;
 }
-
 .subKicker {
   font-size: 14px;
   font-weight: 700;
@@ -91,7 +80,6 @@ body {
   gap: 12px;
   align-items: center;
 }
-
 .thumb {
   width: 56px;
   height: 56px;
@@ -99,19 +87,16 @@ body {
   object-fit: cover;
   box-shadow: 0 18px 50px rgba(0,0,0,0.55);
 }
-
 .trackTitle {
   font-size: 20px;
   font-weight: 900;
   line-height: 1.1;
 }
-
 .trackArtist {
   font-size: 14px;
   opacity: 0.75;
   margin-top: 2px;
 }
-
 .plusBtn {
   width: 42px;
   height: 42px;
@@ -124,7 +109,7 @@ body {
 }
 
 /* Progress */
-.progressRow { margin-top: 14px; }
+.progressRow { margin-top: 2px; }
 .progressTrack {
   height: 4px;
   border-radius: 999px;
@@ -149,22 +134,22 @@ body {
   opacity: 0.75;
 }
 
-/* Fake controls (visual only) */
-.fakeControlsRow {
+/* Controls (visual only) */
+.controlsRow {
   display: grid;
   grid-template-columns: 42px 42px 84px 42px 42px;
   gap: 10px;
   align-items: center;
-  margin-top: 18px;
+  margin-top: 4px;
 }
-.fakeIcon {
+.ctl {
   width: 42px;
   height: 42px;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,0.14);
   background: rgba(0,0,0,0.12);
 }
-.fakePlay {
+.playBtn {
   width: 84px;
   height: 84px;
   border-radius: 999px;
@@ -173,12 +158,20 @@ body {
   justify-self: center;
 }
 
-/* Sections */
+/* small peek label like Spotify */
+.peekTitle {
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 800;
+  opacity: 0.9;
+}
+
+/* =========================
+   SECTION 2 (Dark page)
+========================= */
 .sections {
-  position: relative;
-  z-index: 20;
   padding: 16px;
-  margin-top: -12vh; /* lets sections begin while artwork is still visible */
+  background: #0b0b0f; /* pure dark after hero */
 }
 
 .sectionCard {
@@ -186,7 +179,6 @@ body {
   padding: 16px;
   margin-bottom: 14px;
   background: rgba(20,20,24,0.85);
-  backdrop-filter: blur(14px);
   border: 1px solid rgba(255,255,255,0.06);
   box-shadow: 0 18px 60px rgba(0,0,0,0.35);
 }
@@ -197,7 +189,7 @@ body {
   font-weight: 900;
 }
 
-/* Related track card */
+/* Related */
 .relatedCard {
   display: grid;
   grid-template-columns: 72px 1fr 42px;
@@ -208,26 +200,22 @@ body {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.08);
 }
-
 .relatedThumb {
   width: 72px;
   height: 72px;
   border-radius: 12px;
   background: rgba(255,255,255,0.10);
 }
-
 .relatedName {
   font-size: 16px;
   font-weight: 900;
 }
-
 .relatedDesc {
   margin-top: 4px;
   font-size: 12px;
   opacity: 0.75;
   line-height: 1.3;
 }
-
 .relatedPlus {
   width: 38px;
   height: 38px;
@@ -245,9 +233,7 @@ body {
   justify-content: space-between;
   align-items: center;
 }
-
 .lyricsBtns { display: flex; gap: 10px; }
-
 .roundBtn {
   width: 42px;
   height: 42px;
@@ -264,14 +250,12 @@ body {
   background: rgba(210, 120, 20, 0.78);
   border: 1px solid rgba(255,255,255,0.10);
 }
-
 .lyricBig {
   margin: 0 0 16px;
   font-size: 30px;
   font-weight: 950;
   line-height: 1.08;
 }
-
 .lyricSmall {
   margin: 0;
   font-size: 18px;
@@ -279,13 +263,11 @@ body {
   opacity: 0.9;
 }
 
-/* Generic */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
-
 .tile {
   aspect-ratio: 9 / 16;
   border-radius: 14px;
