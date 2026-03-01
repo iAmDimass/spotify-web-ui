@@ -7,14 +7,13 @@ body {
   color: rgba(255,255,255,0.92);
 }
 
-/* ================= HERO ================= */
-
+/* ===== HERO ===== */
 .hero {
   position: relative;
 
-  /* IMPORTANT FIX */
-  height: 100svh;     /* visible viewport on first load */
-  height: 100vh;      /* fallback */
+  /* Fix for mobile URL bar behavior */
+  height: 100svh;
+  height: 100vh; /* fallback */
 
   background-size: cover;
   background-position: center;
@@ -25,16 +24,108 @@ body {
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(0,0,0,0.10),
-      rgba(0,0,0,0.25) 55%,
-      rgba(0,0,0,0.65) 100%
-    );
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.10),
+    rgba(0,0,0,0.25) 55%,
+    rgba(0,0,0,0.65) 100%
+  );
+  pointer-events: none;
 }
 
 .heroContent {
+  position: relative;
+  height: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+
+  display: grid;
+  align-content: end;
+
+  padding: 24px 16px 140px;
+}
+
+.heroTitle {
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.heroDesc {
+  font-size: 14px;
+  opacity: 0.8;
+  max-width: 50ch;
+  margin: 10px 0 0;
+}
+
+/* ===== SECTIONS ===== */
+:root{
+  --peek: 64px;         /* how far header peeks into hero */
+  --headerH: 56px;      /* reserved space for header height */
+}
+
+.sections {
+  background: #0b0b0f;
+  padding: 0 16px 16px;
+}
+
+/* Normal spacing */
+.section {
+  margin-top: 16px;
+}
+
+/* Header + Card styling */
+.sectionHeader {
+  font-size: 16px;
+  font-weight: 900;
+  padding: 14px 16px;
+
+  background: rgba(20,20,24,0.95);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px 18px 0 0;
+}
+
+.sectionCard {
+  padding: 16px;
+  background: rgba(20,20,24,0.95);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-top: none;
+  border-radius: 0 0 18px 18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+}
+
+.sectionCard p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.82;
+  line-height: 1.55;
+}
+
+/* ✅ FIXED PEEK: only header overlaps, card stays in place */
+.section .sectionHeader.peek {
+  /* remove the old negative margin idea entirely */
+  margin-top: 0;
+
+  /* take it out of flow only for the peek header */
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(-1 * var(--peek));
+  z-index: 3;
+}
+
+/* reserve space so the card doesn’t jump upward */
+.section:has(.sectionHeader.peek) {
+  position: relative;
+  padding-top: var(--headerH);
+}
+
+/* mobile tweaks */
+@media (max-width: 420px) {
+  .heroTitle { font-size: 30px; }
+  :root { --peek: 56px; --headerH: 52px; }
+}.heroContent {
   position: relative;
   height: 100%;
   max-width: 560px;
