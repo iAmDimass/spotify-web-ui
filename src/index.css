@@ -5,64 +5,68 @@ body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: #0b0b0f;
   color: rgba(255,255,255,0.92);
+  overflow-x: hidden;
 }
 
 /* ===== HERO ===== */
 .hero {
   position: relative;
 
-  /* Fix for mobile URL bar behavior */
+  /* Mobile browser URL bar behavior:
+     svh = viewport when bars are visible (first load) */
   height: 100svh;
   height: 100vh; /* fallback */
 
+  overflow: hidden;
   background-size: cover;
   background-position: center;
   background-color: #0b0b0f;
-  overflow: hidden;
 }
 
+/* Static overlay for readability (NOT animated) */
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.10),
-    rgba(0,0,0,0.25) 55%,
-    rgba(0,0,0,0.65) 100%
-  );
+  background:
+    radial-gradient(900px 700px at 50% 28%, rgba(0,0,0,0.00), rgba(0,0,0,0.18) 60%, rgba(0,0,0,0.55) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.22) 55%, rgba(0,0,0,0.65) 100%);
   pointer-events: none;
 }
 
+/* Title block position (lower-third, not too bottom) */
 .heroContent {
   position: relative;
   height: 100%;
-  max-width: 560px;
+  width: min(560px, 94vw);
   margin: 0 auto;
 
   display: grid;
   align-content: end;
 
-  padding: 24px 16px 140px;
+  padding: 24px 16px clamp(110px, 18svh, 180px);
+  gap: 10px;
 }
 
 .heroTitle {
+  margin: 0;
   font-size: 34px;
   font-weight: 900;
   line-height: 1.1;
-  margin: 0;
+  text-shadow: 0 10px 40px rgba(0,0,0,0.55);
 }
 
 .heroDesc {
+  margin: 0;
   font-size: 14px;
-  opacity: 0.8;
-  max-width: 50ch;
-  margin: 10px 0 0;
+  opacity: 0.82;
+  line-height: 1.45;
+  max-width: 52ch;
 }
 
 /* ===== SECTIONS ===== */
-:root{
-  --peek: 64px;         /* how far header peeks into hero */
-  --headerH: 56px;      /* reserved space for header height */
+:root {
+  --peek: 64px;       /* how much the first header peeks into hero */
+  --headerH: 56px;    /* reserved space for header height (prevents jump) */
 }
 
 .sections {
@@ -70,22 +74,22 @@ body {
   padding: 0 16px 16px;
 }
 
-/* Normal spacing */
+/* Each section */
 .section {
   margin-top: 16px;
 }
 
-/* Header + Card styling */
+/* Header strip */
 .sectionHeader {
   font-size: 16px;
   font-weight: 900;
   padding: 14px 16px;
-
   background: rgba(20,20,24,0.95);
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 18px 18px 0 0;
 }
 
+/* Card */
 .sectionCard {
   padding: 16px;
   background: rgba(20,20,24,0.95);
@@ -95,19 +99,20 @@ body {
   box-shadow: 0 20px 60px rgba(0,0,0,0.35);
 }
 
-.sectionCard p {
+.sectionText {
   margin: 0;
   font-size: 14px;
   opacity: 0.82;
   line-height: 1.55;
 }
 
-/* ✅ FIXED PEEK: only header overlaps, card stays in place */
-.section .sectionHeader.peek {
-  /* remove the old negative margin idea entirely */
-  margin-top: 0;
+/* ===== PEEK LOGIC (only first section uses .hasPeek + .peek) ===== */
+.section.hasPeek {
+  position: relative;
+  padding-top: var(--headerH); /* reserve space so the card stays clean */
+}
 
-  /* take it out of flow only for the peek header */
+.sectionHeader.peek {
   position: absolute;
   left: 0;
   right: 0;
@@ -115,13 +120,7 @@ body {
   z-index: 3;
 }
 
-/* reserve space so the card doesn’t jump upward */
-.section:has(.sectionHeader.peek) {
-  position: relative;
-  padding-top: var(--headerH);
-}
-
-/* mobile tweaks */
+/* Mobile tweaks */
 @media (max-width: 420px) {
   .heroTitle { font-size: 30px; }
   :root { --peek: 56px; --headerH: 52px; }
