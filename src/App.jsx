@@ -5,7 +5,7 @@ export default function App() {
   return (
     <div className="page">
       <section className="hero" style={{ backgroundImage: `url(${artwork})` }}>
-        <div className="heroOverlay" />
+        <div className="heroOverlay" aria-hidden="true" />
         <div className="heroContent">
           <h1 className="heroTitle">Discover New Experiences</h1>
           <p className="heroDesc">
@@ -16,11 +16,10 @@ export default function App() {
       </section>
 
       <main className="sections">
-        <section className="section">
-          {/* keep peek class here */}
+        <section className="section hasPeek">
           <div className="sectionHeader peek">Overview</div>
           <div className="sectionCard">
-            <p>
+            <p className="sectionText">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
               ullamcorper, velit nec pharetra tincidunt, augue risus ultrices
               nisi, vitae posuere neque purus sed elit.
@@ -31,7 +30,7 @@ export default function App() {
         <section className="section">
           <div className="sectionHeader">Details</div>
           <div className="sectionCard">
-            <p>
+            <p className="sectionText">
               Praesent eget erat non leo posuere interdum. Integer non justo sed
               orci feugiat ultricies.
             </p>
@@ -41,7 +40,7 @@ export default function App() {
         <section className="section">
           <div className="sectionHeader">Features</div>
           <div className="sectionCard">
-            <p>
+            <p className="sectionText">
               Morbi eleifend, nibh vitae vulputate vulputate, massa arcu luctus
               justo, sit amet luctus enim erat sed mi.
             </p>
@@ -49,35 +48,6 @@ export default function App() {
         </section>
 
         <div style={{ height: 700 }} />
-      </main>
-    </div>
-  );
-}            </p>
-          </div>
-        </section>
-
-        {/* More sections */}
-        <section className="section">
-          <div className="sectionHeader">Details</div>
-          <div className="sectionCard">
-            <p>
-              Praesent eget erat non leo posuere interdum.
-              Integer non justo sed orci feugiat ultricies.
-            </p>
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="sectionHeader">Features</div>
-          <div className="sectionCard">
-            <p>
-              Morbi eleifend, nibh vitae vulputate vulputate,
-              massa arcu luctus justo, sit amet luctus enim erat sed mi.
-            </p>
-          </div>
-        </section>
-
-        <div style={{ height: 600 }} />
       </main>
     </div>
   );
