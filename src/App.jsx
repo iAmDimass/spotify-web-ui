@@ -1,6 +1,6 @@
 export default function App() {
   const artworkUrl =
-    "https://instagram.fsrg5-1.fna.fbcdn.net/v/t51.82787-15/634497238_18565576186035723_1226701140431012928_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=MzgzMTcwMDY4NDIyODMxMDc4OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjEwODB4MTM1MC5zZHIuQzMifQ%3D%3D&_nc_ohc=mIjTb1950TAQ7kNvwE6XDg5&_nc_oc=Adl6si-apmV1EbBOvt1Y2kSrzAEPJ6e1yLu5iXdbKJyP4x7otf85nFKsQjhLpyTjDos&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.fsrg5-1.fna&_nc_gid=FA3IH9BEGa5_3_ZpFRzmFg&_nc_ss=8&oh=00_AfskOgFJeVW11LlS3wvGkCPksDSSDBy43Pw6OMdz2h_NZA&oe=69A9B5EE";
+    "https://image2url.com/r2/default/images/1772355798345-e4c9c96d-86bb-415f-85e0-7932a4873b8b.jpg";
 
   return (
     <div className="page">
