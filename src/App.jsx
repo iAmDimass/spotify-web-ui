@@ -4,84 +4,78 @@ import { motion, useScroll, useTransform } from "framer-motion";
 export default function App() {
   const ref = useRef(null);
 
+  // scroll progress across the whole page
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end end"],
   });
 
-  // Cover transforms (subtle)
-  const coverScale = useTransform(scrollYProgress, [0, 0.35], [1.06, 1.0]);
-  const coverBlurPx = useTransform(scrollYProgress, [0, 0.35], [0, 18]);
-  const coverBlur = useTransform(coverBlurPx, (v) => `blur(${v}px)`);
-  const coverSat = useTransform(scrollYProgress, [0, 0.35], [1.2, 0.9]);
-  const coverFilter = useTransform([coverSat], ([s]) => `saturate(${s})`);
+  /**
+   * Spotify behavior:
+   * - cover window starts near full height
+   * - collapses upward to a smaller height
+   * - image itself doesn't scale; it's just clipped
+   */
+  const heroH_vh = useTransform(scrollYProgress, [0, 0.22], [100, 52]); // tweak end height
+  const heroHeight = useTransform(heroH_vh, (v) => `${v}vh`);
 
-  // Dark surface (this is the "Spotify bottom area")
-  // It becomes stronger as you scroll
-  const surfaceOpacity = useTransform(scrollYProgress, [0, 0.25], [0.35, 0.9]);
-
-  // Sheet rises
-  const sheetY = useTransform(scrollYProgress, [0, 0.25], [220, 0]);
+  // optional: slight dim/blur increase (secondary effect)
+  const dimOpacity = useTransform(scrollYProgress, [0, 0.22], [0.05, 0.35]);
+  const blurPx = useTransform(scrollYProgress, [0, 0.22], [0, 10]);
+  const blurFilter = useTransform(blurPx, (v) => `blur(${v}px)`);
 
   const coverUrl =
     "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1600&q=80&auto=format&fit=crop";
 
   return (
-    <div ref={ref} className="page">
-      {/* FIXED cover region (only top area, not full screen) */}
-      <motion.div className="coverRegion" aria-hidden="true">
+    <div ref={ref} className="spPage">
+      {/* Dark surface behind everything (Spotify bottom area) */}
+      <div className="spSurface" />
+
+      {/* Collapsing cover window (THIS is the Spotify trick) */}
+      <motion.header className="spHero" style={{ height: heroHeight }}>
+        {/* Image is INSIDE a clipped container. It doesn't resize; it gets cropped. */}
         <motion.div
-          className="coverImg"
+          className="spHeroImg"
           style={{
             backgroundImage: `url(${coverUrl})`,
-            scale: coverScale,
-            filter: coverFilter,
+            filter: blurFilter, // optional
           }}
+          aria-hidden="true"
         />
-        {/* Optional blur overlay */}
-        <motion.div className="coverBlur" style={{ filter: coverBlur }} />
-        {/* Fade to dark at the bottom of the cover region */}
-        <div className="coverFadeToDark" />
-      </motion.div>
 
-      {/* Dark surface behind sheet/sections (Spotify feel) */}
-      <motion.div
-        className="surface"
-        style={{ opacity: surfaceOpacity }}
-        aria-hidden="true"
-      />
+        {/* Soft fade at bottom of hero so the cut line isn’t harsh */}
+        <div className="spHeroFade" aria-hidden="true" />
 
-      {/* Foreground hero content */}
-      <section className="hero">
-        <div className="trackRow">
-          <img className="thumb" src={coverUrl} alt="" />
-          <div className="trackMeta">
-            <div className="trackTitle">Ada Titik-Titik Di Ujung Doa</div>
-            <div className="trackArtist">Sal Priadi</div>
+        {/* Optional dim overlay */}
+        <motion.div className="spHeroDim" style={{ opacity: dimOpacity }} aria-hidden="true" />
+
+        {/* Foreground content on top of the cover */}
+        <div className="spHeroContent">
+          <div className="spKicker">PLAYING FROM SEARCH</div>
+          <div className="spTitle">Ada titik-titik di ujung doa</div>
+          <div className="spArtist">Sal Priadi</div>
+        </div>
+      </motion.header>
+
+      {/* Everything below sits on the dark surface */}
+      <main className="spBody">
+        <section className="spSection">
+          <h3>Related Track</h3>
+          <div className="spCard">Related item…</div>
+        </section>
+
+        <section className="spSection">
+          <h3>Lyrics</h3>
+          <div className="spLyricsCard">
+            <p>Kucoba memaafkanmu selalu</p>
+            <p>Kalau di situ ada salahku</p>
+            <p>Maafkan ku juga</p>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Sheet (lyrics / related) */}
-      <motion.section className="sheet" style={{ y: sheetY }}>
-        <div className="sheetHandle" />
-
-        <div className="block">
-          <div className="h2">Related Track</div>
-          <div className="card">…</div>
-        </div>
-
-        <div className="block">
-          <div className="h2">Lyrics</div>
-          <div className="lyricsCard">
-            <p className="lyricBig">Kucoba memaafkanmu selalu</p>
-            <p className="lyricBig">Kalau di situ ada salahku</p>
-            <p className="lyricBig">Maafkan ku juga</p>
-          </div>
-        </div>
-
-        <div style={{ height: 700 }} />
-      </motion.section>
+        <div style={{ height: 900 }} />
+      </main>
     </div>
   );
 }
