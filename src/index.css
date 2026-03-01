@@ -3,7 +3,7 @@ html, body { margin: 0; padding: 0; }
 
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: #0b0b0f;
+  background: #0b0b0f;               /* constant dark background */
   color: rgba(255,255,255,0.92);
   overflow-x: hidden;
 }
@@ -12,40 +12,28 @@ body {
   min-height: 200vh;
 }
 
-/* HERO (Section 1) */
+/* SECTION 1: HERO (scrolls normally) */
 .hero {
   position: relative;
-  height: 92vh; /* <-- makes the next section (Lyrics bar) peek */
+  height: 92vh;                      /* shows a peek of the next section */
   overflow: hidden;
-  background: #0b0b0f;
-}
-
-/* Artwork background inside hero */
-.heroArtwork {
-  position: absolute;
-  inset: 0;
   background-size: cover;
   background-position: center;
-  z-index: 0;
-  will-change: opacity;
+  background-color: #0b0b0f;          /* fallback */
 }
 
-/* Overlay inside hero (darkens as you scroll) */
+/* Static overlay for readability (NOT animated, not changing on scroll) */
 .heroOverlay {
   position: absolute;
   inset: 0;
   background:
     radial-gradient(900px 700px at 50% 30%, rgba(0,0,0,0.00), rgba(0,0,0,0.22) 60%, rgba(0,0,0,0.85) 100%),
-    linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.95) 100%);
-  z-index: 1;
+    linear-gradient(to bottom, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.95) 100%);
   pointer-events: none;
-  will-change: opacity;
 }
 
-/* UI in hero */
 .heroContent {
   position: relative;
-  z-index: 2;
   height: 100%;
   padding: 18px 16px 22px;
   display: grid;
@@ -163,13 +151,13 @@ body {
   justify-self: center;
 }
 
-/* SECTIONS */
+/* SECTION 2+: normal dark scroll page */
 .sections {
   background: #0b0b0f;
   padding: 14px 16px 16px;
 }
 
-/* Lyrics peek bar (Spotify-like hint) */
+/* Lyrics peek bar visible initially */
 .peekBar {
   display: flex;
   align-items: center;
@@ -178,7 +166,7 @@ body {
 
   padding: 14px 14px;
   border-radius: 18px;
-  margin-top: -18px; /* <-- brings it up so it's visible at initial view */
+  margin-top: -18px;     /* pull up to be visible at first view */
   margin-bottom: 14px;
 
   background: rgba(175, 145, 30, 0.78);
@@ -247,13 +235,12 @@ body {
   opacity: 0.9;
 }
 
-/* Related */
+/* Related grid */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
-
 .tile {
   aspect-ratio: 9 / 16;
   border-radius: 14px;
