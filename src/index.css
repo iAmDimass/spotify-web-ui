@@ -3,7 +3,7 @@ html, body { margin: 0; padding: 0; }
 
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: #0b0b0f;               /* constant dark background */
+  background: #0b0b0f; /* constant dark background */
   color: rgba(255,255,255,0.92);
   overflow-x: hidden;
 }
@@ -12,242 +12,85 @@ body {
   min-height: 200vh;
 }
 
-/* SECTION 1: HERO (scrolls normally) */
+/* HERO (Section 1) */
 .hero {
   position: relative;
-  height: 92vh;                      /* shows a peek of the next section */
+  height: 92vh;                 /* <-- makes section 2 peek naturally */
   overflow: hidden;
   background-size: cover;
   background-position: center;
-  background-color: #0b0b0f;          /* fallback */
+  background-color: #0b0b0f;
 }
 
-/* Static overlay for readability (NOT animated, not changing on scroll) */
+/* Static overlay (NOT animated) */
 .heroOverlay {
   position: absolute;
   inset: 0;
   background:
     radial-gradient(900px 700px at 50% 30%, rgba(0,0,0,0.00), rgba(0,0,0,0.22) 60%, rgba(0,0,0,0.85) 100%),
-    linear-gradient(to bottom, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.95) 100%);
+    linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.95) 100%);
   pointer-events: none;
 }
 
+/* Hero text */
 .heroContent {
   position: relative;
   height: 100%;
-  padding: 18px 16px 22px;
+  padding: 24px 16px 22px;
   display: grid;
   align-content: end;
-  gap: 14px;
-  width: min(520px, 94vw);
+  gap: 10px;
+  width: min(560px, 94vw);
   margin: 0 auto;
 }
 
-.heroTopMeta {
-  text-align: center;
-  opacity: 0.9;
+.heroTitle {
+  font-size: 34px;
+  font-weight: 950;
+  letter-spacing: 0.2px;
+  line-height: 1.05;
+  text-shadow: 0 10px 40px rgba(0,0,0,0.55);
 }
-.kicker {
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  opacity: 0.75;
-}
-.subKicker {
+
+.heroDesc {
   font-size: 14px;
-  font-weight: 700;
-  opacity: 0.9;
+  opacity: 0.8;
+  line-height: 1.45;
+  max-width: 48ch;
 }
 
-.lyricLine {
-  font-size: 20px;
-  font-weight: 800;
-  text-shadow: 0 6px 30px rgba(0,0,0,0.55);
-}
-
-/* Track row */
-.trackRow {
-  display: grid;
-  grid-template-columns: 56px 1fr 44px;
-  gap: 12px;
-  align-items: center;
-}
-
-.thumb {
-  width: 56px;
-  height: 56px;
-  border-radius: 10px;
-  object-fit: cover;
-  box-shadow: 0 18px 50px rgba(0,0,0,0.55);
-}
-
-.trackTitle {
-  font-size: 22px;
-  font-weight: 900;
-  line-height: 1.1;
-}
-
-.trackArtist {
-  font-size: 14px;
-  opacity: 0.75;
-  margin-top: 2px;
-}
-
-.checkBadge {
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  background: rgba(29, 185, 84, 0.95);
-  color: #06140a;
-  font-weight: 900;
-}
-
-/* Progress */
-.progressTrack {
-  height: 4px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.25);
-  position: relative;
-}
-.progressDot {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.95);
-  position: absolute;
-  top: 50%;
-  left: 10%;
-  transform: translate(-50%, -50%);
-}
-.times {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-  font-size: 12px;
-  opacity: 0.75;
-}
-
-/* Controls (visual only) */
-.controlsRow {
-  display: grid;
-  grid-template-columns: 42px 42px 84px 42px 42px;
-  gap: 10px;
-  align-items: center;
-}
-.ctl {
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(0,0,0,0.12);
-}
-.playBtn {
-  width: 84px;
-  height: 84px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.92);
-  box-shadow: 0 22px 70px rgba(0,0,0,0.55);
-  justify-self: center;
-}
-
-/* SECTION 2+: normal dark scroll page */
+/* SECTIONS */
 .sections {
   background: #0b0b0f;
   padding: 14px 16px 16px;
 }
 
-/* Lyrics peek bar visible initially */
-.peekBar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+/* IMPORTANT: no special peek bar.
+   The peek happens naturally because .hero is < 100vh. */
 
-  padding: 14px 14px;
-  border-radius: 18px;
-  margin-top: -18px;     /* pull up to be visible at first view */
-  margin-bottom: 14px;
-
-  background: rgba(175, 145, 30, 0.78);
-  border: 1px solid rgba(255,255,255,0.10);
-}
-
-.peekTitle {
-  font-size: 18px;
-  font-weight: 900;
-}
-
-.peekBtns {
-  display: flex;
-  gap: 10px;
-}
-
-.peekBtn {
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
-  border: 1px solid rgba(0,0,0,0.18);
-  background: rgba(0,0,0,0.10);
-  color: rgba(255,255,255,0.92);
-}
-
-/* Section cards */
 .sectionCard {
   border-radius: 18px;
   padding: 16px;
-  margin-bottom: 14px;
+  margin-top: 14px;            /* first card becomes the peek */
   background: rgba(20,20,24,0.85);
   border: 1px solid rgba(255,255,255,0.06);
   box-shadow: 0 18px 60px rgba(0,0,0,0.35);
 }
 
 .sectionTitle {
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   font-size: 16px;
   font-weight: 900;
 }
 
-/* Lyrics card */
-.lyricsCard {
-  margin-top: 10px;
-  padding: 18px;
-  border-radius: 18px;
-  background: rgba(210, 120, 20, 0.78);
-  border: 1px solid rgba(255,255,255,0.10);
-}
-
-.lyricBig {
-  margin: 0 0 16px;
-  font-size: 30px;
-  font-weight: 950;
-  line-height: 1.08;
-}
-
-.lyricMuted {
-  color: rgba(0,0,0,0.85);
-}
-
-.lyricSmall {
+.sectionText {
   margin: 0;
-  font-size: 18px;
-  font-weight: 800;
-  opacity: 0.9;
+  font-size: 14px;
+  opacity: 0.82;
+  line-height: 1.55;
 }
 
-/* Related grid */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-.tile {
-  aspect-ratio: 9 / 16;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.08);
-}
-
+/* Mobile tweak */
 @media (max-width: 420px) {
-  .lyricBig { font-size: 28px; }
+  .heroTitle { font-size: 30px; }
 }
