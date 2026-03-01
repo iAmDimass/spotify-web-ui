@@ -9,78 +9,60 @@ export default function App() {
     offset: ["start start", "end end"],
   });
 
-  // ---- COVER / BACKGROUND transforms (the "Spotify trick") ----
-  // small zoom-out as you scroll
-  const bgScale = useTransform(scrollYProgress, [0, 0.35], [1.07, 1.0]);
+  // Cover transforms (subtle)
+  const coverScale = useTransform(scrollYProgress, [0, 0.35], [1.06, 1.0]);
+  const coverBlurPx = useTransform(scrollYProgress, [0, 0.35], [0, 18]);
+  const coverBlur = useTransform(coverBlurPx, (v) => `blur(${v}px)`);
+  const coverSat = useTransform(scrollYProgress, [0, 0.35], [1.2, 0.9]);
+  const coverFilter = useTransform([coverSat], ([s]) => `saturate(${s})`);
 
-  // blur increases
-  const bgBlurPx = useTransform(scrollYProgress, [0, 0.35], [0, 22]);
-  const bgBlur = useTransform(bgBlurPx, (v) => `blur(${v}px)`);
+  // Dark surface (this is the "Spotify bottom area")
+  // It becomes stronger as you scroll
+  const surfaceOpacity = useTransform(scrollYProgress, [0, 0.25], [0.35, 0.9]);
 
-  // saturation decreases (makes it feel less "loud")
-  const bgSaturate = useTransform(scrollYProgress, [0, 0.35], [1.25, 0.85]);
-
-  // optional slight contrast normalization
-  const bgContrast = useTransform(scrollYProgress, [0, 0.35], [1.05, 1.0]);
-
-  // combine saturate + contrast into one filter string
-  const bgFilter = useTransform([bgSaturate, bgContrast], ([s, c]) => {
-    return `saturate(${s}) contrast(${c})`;
-  });
-
-  // dim overlay increases
-  const dimOpacity = useTransform(scrollYProgress, [0, 0.35], [0.10, 0.65]);
-
-  // (optional) hero fades a bit as sheet comes up
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0.65]);
-  const heroY = useTransform(scrollYProgress, [0, 0.25], [0, -18]);
-
-  // sheet rises up (the feeling that content "covers" the image)
+  // Sheet rises
   const sheetY = useTransform(scrollYProgress, [0, 0.25], [220, 0]);
 
-  // Replace with your cover image
   const coverUrl =
     "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1600&q=80&auto=format&fit=crop";
 
   return (
     <div ref={ref} className="page">
-      {/* 1) FIXED cover layer (never scrolls) */}
+      {/* FIXED cover region (only top area, not full screen) */}
+      <motion.div className="coverRegion" aria-hidden="true">
+        <motion.div
+          className="coverImg"
+          style={{
+            backgroundImage: `url(${coverUrl})`,
+            scale: coverScale,
+            filter: coverFilter,
+          }}
+        />
+        {/* Optional blur overlay */}
+        <motion.div className="coverBlur" style={{ filter: coverBlur }} />
+        {/* Fade to dark at the bottom of the cover region */}
+        <div className="coverFadeToDark" />
+      </motion.div>
+
+      {/* Dark surface behind sheet/sections (Spotify feel) */}
       <motion.div
-        className="cover"
-        style={{
-          backgroundImage: `url(${coverUrl})`,
-          scale: bgScale,
-          filter: bgFilter,
-        }}
+        className="surface"
+        style={{ opacity: surfaceOpacity }}
         aria-hidden="true"
       />
 
-      {/* 2) Blur layer (separate so it feels like wallpaper blur) */}
-      <motion.div className="coverBlur" style={{ filter: bgBlur }} aria-hidden="true" />
-
-      {/* 3) Gradient mask (always present) */}
-      <div className="coverGradient" aria-hidden="true" />
-
-      {/* 4) Dim overlay ramps up on scroll */}
-      <motion.div className="coverDim" style={{ opacity: dimOpacity }} aria-hidden="true" />
-
       {/* Foreground hero content */}
       <section className="hero">
-        <motion.div className="heroInner" style={{ opacity: heroOpacity, y: heroY }}>
-          <div className="lyricLine">Your face against the trees</div>
-
-          <div className="trackRow">
-            <img className="thumb" src={coverUrl} alt="" />
-            <div className="trackMeta">
-              <div className="trackTitle">Song Title</div>
-              <div className="trackArtist">Artist</div>
-            </div>
-            <div className="check">✓</div>
+        <div className="trackRow">
+          <img className="thumb" src={coverUrl} alt="" />
+          <div className="trackMeta">
+            <div className="trackTitle">Ada Titik-Titik Di Ujung Doa</div>
+            <div className="trackArtist">Sal Priadi</div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
-      {/* Sheet that scrolls over the cover */}
+      {/* Sheet (lyrics / related) */}
       <motion.section className="sheet" style={{ y: sheetY }}>
         <div className="sheetHandle" />
 
