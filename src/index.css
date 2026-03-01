@@ -1,89 +1,98 @@
-/* Base */
+/* Reset */
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: #0b0b0f;
   color: rgba(255,255,255,0.92);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   overflow-x: hidden;
 }
 
-.spPage {
-  min-height: 220vh;
+/* Scroll container */
+.pageScroll {
+  height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Base wrapper */
+.pageBase {
+  min-height: 240vh;
   position: relative;
 }
 
-/* Fixed artwork (this is the “artwork limit” behavior) */
-.spBg {
+/* Always-present dark base background */
+.baseDark {
+  position: fixed;
+  inset: 0;
+  background: #0b0b0f;
+  z-index: 0;
+}
+
+/* Artwork layer (limited to hero experience by fading out) */
+.artLayer {
   position: fixed;
   inset: 0;
   background-size: cover;
   background-position: center;
-  z-index: 0;
-}
-
-/* Blur overlay */
-.spBgBlur {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.001);
-  backdrop-filter: blur(0px);
   z-index: 1;
-  pointer-events: none;
+  will-change: opacity, filter;
 }
 
-/* Dim overlay */
-.spBgDim {
+/* Dark overlay ramps up, making lower page fully dark */
+.darkOverlay {
   position: fixed;
   inset: 0;
   background:
-    linear-gradient(to bottom, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.20) 50%, rgba(0,0,0,0.85) 100%);
+    radial-gradient(900px 700px at 50% 35%, rgba(0,0,0,0.00), rgba(0,0,0,0.25) 55%, rgba(0,0,0,0.75) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.95) 100%);
   z-index: 2;
   pointer-events: none;
+  will-change: opacity;
 }
 
-/* Hero (top) */
-.spHero {
+/* HERO: height limit zone */
+.hero {
   position: relative;
   z-index: 10;
-  min-height: 100vh;
-  padding: 18px 16px;
+  min-height: 100vh; /* <-- THIS is the artwork section height limit */
   display: grid;
   align-items: end;
+  padding: 18px 16px 24px;
 }
 
-.spHeroInner {
-  width: min(480px, 94vw);
+.heroInner {
+  width: min(520px, 94vw);
   margin: 0 auto;
-  padding-bottom: 14px;
 }
 
-.spTopMeta {
+.heroTopMeta {
   text-align: center;
   margin-bottom: 18px;
   opacity: 0.9;
 }
 
-.spKicker {
+.kicker {
   font-size: 12px;
   letter-spacing: 0.08em;
   opacity: 0.75;
 }
 
-.spSubKicker {
+.subKicker {
   font-size: 14px;
   font-weight: 700;
   opacity: 0.9;
 }
 
-.spTrackRow {
+/* Track row */
+.trackRow {
   display: grid;
   grid-template-columns: 56px 1fr 44px;
   gap: 12px;
   align-items: center;
 }
 
-.spThumb {
+.thumb {
   width: 56px;
   height: 56px;
   border-radius: 10px;
@@ -91,19 +100,19 @@ body {
   box-shadow: 0 18px 50px rgba(0,0,0,0.55);
 }
 
-.spTrackTitle {
+.trackTitle {
   font-size: 20px;
   font-weight: 900;
   line-height: 1.1;
 }
 
-.spTrackArtist {
+.trackArtist {
   font-size: 14px;
   opacity: 0.75;
   margin-top: 2px;
 }
 
-.spPlus {
+.plusBtn {
   width: 42px;
   height: 42px;
   border-radius: 999px;
@@ -115,14 +124,14 @@ body {
 }
 
 /* Progress */
-.spProgressRow { margin-top: 14px; }
-.spProgressTrack {
+.progressRow { margin-top: 14px; }
+.progressTrack {
   height: 4px;
   border-radius: 999px;
   background: rgba(255,255,255,0.25);
   position: relative;
 }
-.spProgressDot {
+.progressDot {
   width: 10px;
   height: 10px;
   border-radius: 999px;
@@ -132,7 +141,7 @@ body {
   left: 45%;
   transform: translate(-50%, -50%);
 }
-.spTimes {
+.times {
   display: flex;
   justify-content: space-between;
   margin-top: 8px;
@@ -140,38 +149,56 @@ body {
   opacity: 0.75;
 }
 
-/* Sections (NORMAL SCROLL) */
-.spSections {
+/* Fake controls (visual only) */
+.fakeControlsRow {
+  display: grid;
+  grid-template-columns: 42px 42px 84px 42px 42px;
+  gap: 10px;
+  align-items: center;
+  margin-top: 18px;
+}
+.fakeIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(0,0,0,0.12);
+}
+.fakePlay {
+  width: 84px;
+  height: 84px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 22px 70px rgba(0,0,0,0.55);
+  justify-self: center;
+}
+
+/* Sections */
+.sections {
   position: relative;
   z-index: 20;
   padding: 16px;
+  margin-top: -12vh; /* lets sections begin while artwork is still visible */
 }
 
-/* This overlap creates the “artwork visible height limit” effect */
-.spSections {
-  margin-top: -12vh;
-}
-
-/* Common section style */
-.spSection {
+.sectionCard {
   border-radius: 18px;
   padding: 16px;
   margin-bottom: 14px;
-  background: rgba(20,20,24,0.82);
+  background: rgba(20,20,24,0.85);
   backdrop-filter: blur(14px);
   border: 1px solid rgba(255,255,255,0.06);
   box-shadow: 0 18px 60px rgba(0,0,0,0.35);
 }
 
-.spSectionTitle {
+.sectionTitle {
   margin: 0 0 12px;
   font-size: 16px;
   font-weight: 900;
-  opacity: 0.95;
 }
 
-/* Related card */
-.spRelatedCard {
+/* Related track card */
+.relatedCard {
   display: grid;
   grid-template-columns: 72px 1fr 42px;
   gap: 12px;
@@ -182,26 +209,26 @@ body {
   border: 1px solid rgba(255,255,255,0.08);
 }
 
-.spRelatedThumb {
+.relatedThumb {
   width: 72px;
   height: 72px;
   border-radius: 12px;
   background: rgba(255,255,255,0.10);
 }
 
-.spRelatedName {
+.relatedName {
   font-size: 16px;
   font-weight: 900;
 }
 
-.spRelatedDesc {
+.relatedDesc {
   margin-top: 4px;
   font-size: 12px;
   opacity: 0.75;
   line-height: 1.3;
 }
 
-.spRelatedPlus {
+.relatedPlus {
   width: 38px;
   height: 38px;
   border-radius: 999px;
@@ -213,15 +240,15 @@ body {
 }
 
 /* Lyrics */
-.spLyricsHeader {
+.lyricsHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.spLyricsBtns { display: flex; gap: 10px; }
+.lyricsBtns { display: flex; gap: 10px; }
 
-.spRoundBtn {
+.roundBtn {
   width: 42px;
   height: 42px;
   border-radius: 999px;
@@ -230,7 +257,7 @@ body {
   color: rgba(255,255,255,0.92);
 }
 
-.spLyricsCard {
+.lyricsCard {
   margin-top: 10px;
   padding: 18px;
   border-radius: 18px;
@@ -238,35 +265,34 @@ body {
   border: 1px solid rgba(255,255,255,0.10);
 }
 
-.spLyricBig {
+.lyricBig {
   margin: 0 0 16px;
   font-size: 30px;
   font-weight: 950;
   line-height: 1.08;
 }
 
-.spLyricSmall {
+.lyricSmall {
   margin: 0;
   font-size: 18px;
   font-weight: 800;
   opacity: 0.9;
 }
 
-/* Generic tiles */
-.spGrid {
+/* Generic */
+.grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
-.spTile {
+.tile {
   aspect-ratio: 9 / 16;
   border-radius: 14px;
   background: rgba(255,255,255,0.07);
   border: 1px solid rgba(255,255,255,0.08);
 }
 
-/* Bottom space */
-.spBottomSpace {
-  height: 700px;
+@media (max-width: 420px) {
+  .lyricBig { font-size: 28px; }
 }
