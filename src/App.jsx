@@ -2,37 +2,50 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function App() {
-  const pageRef = useRef(null);
+  const ref = useRef(null);
 
   const { scrollYProgress } = useScroll({
-    target: pageRef,
+    target: ref,
     offset: ["start start", "end end"],
   });
 
-  // Background transitions
+  // ----- Background treatment (Spotify-like "white")
+  // Slight zoom at top to hide edges (feels infinite)
   const bgScale = useTransform(scrollYProgress, [0, 0.35], [1.06, 1.0]);
-  const bgDim = useTransform(scrollYProgress, [0, 0.35], [0.10, 0.65]);
-  const bgBlurPx = useTransform(scrollYProgress, [0, 0.35], [0, 22]);
-  const bgBlur = useTransform(bgBlurPx, (v) => `blur(${v}px)`);
-  const bgSat = useTransform(scrollYProgress, [0, 0.35], [1.25, 0.85]);
-  const bgCont = useTransform(scrollYProgress, [0, 0.35], [1.05, 1.0]);
-  const bgFilter = useTransform([bgSat, bgCont], ([s, c]) => `saturate(${s}) contrast(${c})`);
 
-  // Hero transitions
-  const heroY = useTransform(scrollYProgress, [0, 0.25], [0, -18]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0.65]);
+  // Make artwork feel "white": brighten + desaturate + soften contrast
+  const sat = useTransform(scrollYProgress, [0, 0.35], [0.55, 0.35]);
+  const con = useTransform(scrollYProgress, [0, 0.35], [0.95, 0.88]);
+  const bri = useTransform(scrollYProgress, [0, 0.35], [1.15, 1.05]);
+  const bgFilter = useTransform([sat, con, bri], ([s, c, b]) => {
+    return `saturate(${s}) contrast(${c}) brightness(${b})`;
+  });
 
-  // Sheet rise
-  const sheetY = useTransform(scrollYProgress, [0, 0.25], [220, 0]);
+  // White wash overlay increases as you scroll (this is the key)
+  const washOpacity = useTransform(scrollYProgress, [0, 0.30], [0.18, 0.55]);
+
+  // Blur increases a bit as sheet takes over
+  const blurPx = useTransform(scrollYProgress, [0, 0.35], [0, 18]);
+  const blurFilter = useTransform(blurPx, (v) => `blur(${v}px)`);
+
+  // Bottom dim gradient intensifies on scroll (helps readability)
+  const dimOpacity = useTransform(scrollYProgress, [0, 0.35], [0.10, 0.65]);
+
+  // Hero fades slightly as sheet comes up
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0.70]);
+  const heroY = useTransform(scrollYProgress, [0, 0.25], [0, -14]);
+
+  // Sheet rises from below into place
+  const sheetY = useTransform(scrollYProgress, [0, 0.25], [260, 0]);
 
   const artworkUrl =
-    "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1600&q=80&auto=format&fit=crop";
+    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1600&q=80&auto=format&fit=crop";
 
   return (
-    <div ref={pageRef} className="spPage">
-      {/* Fixed background artwork */}
+    <div ref={ref} className="spWhitePage">
+      {/* 1) Fixed artwork surface */}
       <motion.div
-        className="spBg"
+        className="spArtwork"
         style={{
           backgroundImage: `url(${artworkUrl})`,
           scale: bgScale,
@@ -41,57 +54,77 @@ export default function App() {
         aria-hidden="true"
       />
 
-      {/* Blur & dim overlays */}
-      <motion.div className="spBgBlur" style={{ filter: bgBlur }} aria-hidden="true" />
-      <motion.div className="spBgDim" style={{ opacity: bgDim }} aria-hidden="true" />
+      {/* 2) Blur layer (separate so it feels like wallpaper) */}
+      <motion.div
+        className="spBlurLayer"
+        style={{ filter: blurFilter }}
+        aria-hidden="true"
+      />
 
-      {/* Hero content (no controls, no top bar) */}
+      {/* 3) White wash layer (this makes it look like "white background") */}
+      <motion.div
+        className="spWash"
+        style={{ opacity: washOpacity }}
+        aria-hidden="true"
+      />
+
+      {/* 4) Bottom dim gradient for readability */}
+      <motion.div
+        className="spDim"
+        style={{ opacity: dimOpacity }}
+        aria-hidden="true"
+      />
+
+      {/* HERO UI (simplified) */}
       <section className="spHero">
-        <motion.div className="spHeroInner" style={{ y: heroY, opacity: heroOpacity }}>
-          <div className="spLyricLine">Your face against the trees</div>
+        <motion.div className="spHeroInner" style={{ opacity: heroOpacity, y: heroY }}>
+          <div className="spTitle">Ada titik-titik di ujung</div>
+          <div className="spArtist">Sal Priadi</div>
 
-          <div className="spTrackRow">
-            <img className="spThumb" src={artworkUrl} alt="" />
-            <div className="spTrackMeta">
-              <div className="spTrackTitle">Saw Your Face Today</div>
-              <div className="spTrackArtist">She &amp; Him</div>
+          <div className="spProgress">
+            <div className="spProgressTrack">
+              <div className="spProgressDot" />
             </div>
-            <div className="spCheck">✓</div>
+            <div className="spTimeRow">
+              <span>2:18</span>
+              <span>5:05</span>
+            </div>
+          </div>
+
+          {/* Optional: your “related track” preview card */}
+          <div className="spRelatedMini">
+            <div className="spRelatedLabel">Related Track</div>
+            <div className="spRelatedCard">
+              <div className="spRelatedThumb" />
+              <div className="spRelatedText">
+                <div className="spRelatedTitle">Ada Titik-Titik Di</div>
+                <div className="spRelatedSub">Live Performance</div>
+              </div>
+              <div className="spPlus">+</div>
+            </div>
           </div>
         </motion.div>
       </section>
 
-      {/* Lyrics sheet */}
+      {/* SHEET */}
       <motion.section className="spSheet" style={{ y: sheetY }}>
         <div className="spHandle" />
 
         <div className="spSheetHeader">
           <div className="spSheetTitle">Lyrics</div>
-          <div className="spSheetHeaderBtns">
-            <button className="spRoundBtn" aria-label="Share lyrics">⤴</button>
+          <div className="spSheetBtns">
+            <button className="spRoundBtn" aria-label="Share">⤴</button>
             <button className="spRoundBtn" aria-label="Expand">⤢</button>
           </div>
         </div>
 
-        <div className="spLyrics">
-          <p className="spLyricBig">As they come, as they come</p>
-          <p className="spLyricBig">And I couldn't help but fall in love again</p>
-          <p className="spLyricBig spLyricMuted">No, I couldn't help but fall in love again</p>
-          <p className="spLyricBig spLyricMuted">I saw it glitter as I grew</p>
+        <div className="spLyricsCard">
+          <p className="spLyricBig">Kucoba memaafkanmu selalu</p>
+          <p className="spLyricBig">Kalau di situ ada salahku</p>
+          <p className="spLyricBig">Maafkan ku juga</p>
         </div>
 
-        <div className="spDivider" />
-
-        <div className="spRelated">
-          <div className="spRelatedTitle">Related music videos</div>
-          <div className="spRelatedGrid">
-            <div className="spCard" />
-            <div className="spCard" />
-            <div className="spCard" />
-          </div>
-        </div>
-
-        <div style={{ height: 700 }} />
+        <div style={{ height: 900 }} />
       </motion.section>
     </div>
   );
