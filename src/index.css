@@ -2,12 +2,15 @@
 html, body { margin: 0; padding: 0; }
 
 :root {
-  /* Safe-area insets (notch + home indicator) */
+  /* Safe-area insets (notch + gesture/home indicator) */
   --safe-top: env(safe-area-inset-top);
   --safe-bottom: env(safe-area-inset-bottom);
 
-  /* Peek amount (how much the surface overlaps into hero) */
+  /* Peek amount (how much surface overlaps into hero) */
   --peek: 72px;
+
+  /* Will be set by JS on first load */
+  --heroH: 100vh;
 }
 
 body {
@@ -23,9 +26,11 @@ body {
   width: 100%;
   overflow: hidden;
   background: #0b0b0f;
+
+  /* fallback if JS hasn't set inline height yet */
+  height: var(--heroH);
 }
 
-/* Use real image instead of background-image */
 .heroImage {
   position: absolute;
   inset: 0;
@@ -34,7 +39,6 @@ body {
   object-fit: cover;
 }
 
-/* Static overlay for readability (NOT animated) */
 .heroOverlay {
   position: absolute;
   inset: 0;
@@ -44,7 +48,7 @@ body {
   pointer-events: none;
 }
 
-/* Hero content placement with safe-area support */
+/* Content sits like Spotify: lower-third, with safe-area padding */
 .heroContent {
   position: relative;
   height: 100%;
@@ -58,7 +62,7 @@ body {
   padding:
     calc(24px + var(--safe-top))
     16px
-    calc(140px + var(--safe-bottom));
+    calc(130px + var(--safe-bottom));
 }
 
 .heroTitle {
@@ -84,7 +88,7 @@ body {
 
   background: #0b0b0f;
 
-  /* Spotify-like peek into hero */
+  /* the controlled overlap (peek) */
   margin-top: calc(-1 * var(--peek));
 
   padding:
@@ -93,7 +97,7 @@ body {
     calc(16px + var(--safe-bottom));
 }
 
-/* Optional soft blend at the top edge of the surface */
+/* Optional soft blend at the top edge */
 .surface::before {
   content: "";
   position: absolute;
