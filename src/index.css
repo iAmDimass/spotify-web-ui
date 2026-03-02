@@ -1,5 +1,3 @@
-/* index.css */
-
 :root {
   color-scheme: dark;
 }
@@ -29,10 +27,11 @@ body {
 /* HERO */
 .hero {
   position: relative;
-  overflow: hidden; /* IMPORTANT: prevent overlay/layers from affecting below */
+  overflow: hidden;
   width: 100%;
 }
 
+/* Background image */
 .heroImage {
   position: absolute;
   inset: 0;
@@ -44,14 +43,13 @@ body {
   z-index: 0;
 }
 
-/* The dark/gradient layer ON TOP of image but UNDER content + UNDER surface */
+/* Gradient overlay */
 .heroOverlay {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 1;
 
-  /* feel free to tweak this gradient, but keep it here */
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0.10) 0%,
@@ -60,11 +58,20 @@ body {
   );
 }
 
+/* ✅ HERO TEXT POSITIONED LOWER */
 .heroContent {
-  position: relative;
-  z-index: 2; /* above overlay */
-  padding: 24px 16px 88px;
-  max-width: 760px;
+  position: absolute;
+  z-index: 2;
+
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(760px, calc(100% - 32px));
+
+  /* 72px = surface overlap
+     16px = small visual gap */
+  bottom: calc(72px + 16px);
+
+  padding: 0 16px;
 }
 
 .heroTitle {
@@ -82,18 +89,18 @@ body {
   max-width: 520px;
 }
 
-/* CONTENT SURFACE (this must sit ABOVE the hero overlay) */
+/* CONTENT SURFACE */
 .surface {
   position: relative;
-  z-index: 10; /* IMPORTANT: higher than hero overlay */
-  margin-top: -72px; /* your “peek” overlap */
+  z-index: 10;
+  margin-top: -72px; /* peek overlap */
   padding: 0 16px 64px;
 }
 
 /* CARDS */
 .card {
   position: relative;
-  z-index: 11; /* extra safety */
+  z-index: 11;
   margin: 0 auto 18px;
   max-width: 760px;
 
@@ -106,4 +113,26 @@ body {
 
   border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow:
-    0 18px 50px rgba(0, 0
+    0 18px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.cardHeader {
+  margin: 0 0 10px;
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.cardText {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+@media (max-width: 380px) {
+  .heroTitle {
+    font-size: 40px;
+  }
+}
