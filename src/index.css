@@ -1,6 +1,9 @@
-/* ===================== RESET ===================== */
 * { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: #0b0b0f;
@@ -8,136 +11,92 @@ body {
   overflow-x: hidden;
 }
 
-:root{
-  --bg:#0b0b0f;
-  --card: rgba(20, 20, 24, 0.95);
-  --border: rgba(255,255,255,0.06);
-  --shadow: 0 20px 60px rgba(0,0,0,0.35);
-
-  /* If you still want a small “peek” into the hero, keep this.
-     If you don’t want peek, set to 0px. */
-  --peek: 56px;
-}
-
-/* ===================== PAGE ===================== */
-.page{
-  min-height: 100vh;
-  background: var(--bg);
-}
-
-/* ===================== HERO ===================== */
-.hero{
+/* ===== HERO ===== */
+.hero {
   position: relative;
   width: 100%;
   overflow: hidden;
-  background: var(--bg);
-  z-index: 0; /* hero stays behind */
 }
 
-.heroImage{
+/* Use real image instead of background-image */
+.heroImage {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0;
 }
 
-.heroOverlay{
+/* Static overlay for readability */
+.heroOverlay {
   position: absolute;
   inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.08),
-    rgba(0,0,0,0.30) 55%,
-    rgba(0,0,0,0.82) 100%
-  );
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.1),
+      rgba(0,0,0,0.25) 55%,
+      rgba(0,0,0,0.65) 100%
+    );
 }
 
-.heroContent{
+/* Content placement */
+.heroContent {
   position: relative;
-  z-index: 2; /* above overlay */
-  width: min(560px, 92vw);
-  margin: 0 auto;
   height: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+
   display: grid;
   align-content: end;
-  gap: 10px;
-  padding: 24px 16px calc(96px + var(--peek));
+
+  padding: 24px 16px 140px;
 }
 
-.heroTitle{
+.heroTitle {
   margin: 0;
   font-size: 34px;
   font-weight: 900;
   line-height: 1.1;
-  text-shadow: 0 10px 40px rgba(0,0,0,0.55);
 }
 
-.heroDesc{
-  margin: 0;
+.heroDesc {
+  margin-top: 8px;
   font-size: 14px;
-  line-height: 1.45;
   opacity: 0.82;
-  max-width: 60ch;
+  max-width: 52ch;
 }
 
-/* ===================== SURFACE ===================== */
-.surface{
-  position: relative;
-  z-index: 10;             /* IMPORTANT: above hero/overlay */
-  background: var(--bg);
-  padding: 16px;
-  padding-top: var(--peek); /* reserve space if first card peeks */
+/* ===== SURFACE ===== */
+.surface {
+  background: #0b0b0f;
+  margin-top: -72px; /* Spotify-like peek */
+  padding: 0 16px 16px;
 }
 
-/* ===================== CARDS ===================== */
-.card{
+/* ===== CARDS ===== */
+.card {
   margin-top: 16px;
   padding: 18px;
-  background: var(--card);
+  background: rgba(20,20,24,0.95);
   border-radius: 18px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  position: relative;
-  z-index: 11;
-  overflow: visible; /* IMPORTANT: never clip the header */
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
 }
 
-/* If you want ONLY the first card to “peek” into hero, keep this class.
-   If you are NOT using this class in JSX, remove this block (safe). */
-.card--overview{
-  margin-top: calc(-1 * var(--peek));
-  z-index: 20;
-}
-
-.cardHeader{
+.cardHeader {
   margin: 0 0 8px;
   font-size: 16px;
   font-weight: 900;
-  color: rgba(255,255,255,0.95);
-  position: relative;
-  z-index: 2; /* IMPORTANT: keep above any overlays */
 }
 
-.cardText{
+.cardText {
   margin: 0;
   font-size: 14px;
-  line-height: 1.55;
   opacity: 0.82;
-  position: relative;
-  z-index: 2;
+  line-height: 1.55;
 }
 
-/* ===================== MOBILE ===================== */
-@media (max-width: 420px){
-  :root { --peek: 48px; }
-
-  .heroTitle{ font-size: 30px; }
-
-  .heroContent{
-    padding: 22px 14px calc(88px + var(--peek));
-  }
+@media (max-width: 420px) {
+  .heroTitle { font-size: 30px; }
 }
