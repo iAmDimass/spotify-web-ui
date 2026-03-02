@@ -1,5 +1,13 @@
+/* index.css */
+
 :root {
   color-scheme: dark;
+
+  /* Safe-area insets */
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
 }
 
 * {
@@ -58,7 +66,7 @@ body {
   );
 }
 
-/* ✅ HERO TEXT POSITIONED LOWER */
+/* HERO CONTENT (positioned slightly above Overview card) */
 .heroContent {
   position: absolute;
   z-index: 2;
@@ -68,10 +76,12 @@ body {
   width: min(760px, calc(100% - 32px));
 
   /* 72px = surface overlap
-     16px = small visual gap */
-  bottom: calc(72px + 16px);
+     16px = visual spacing
+     + safe area bottom */
+  bottom: calc(72px + 16px + var(--sab));
 
-  padding: 0 16px;
+  padding-left: calc(16px + var(--sal));
+  padding-right: calc(16px + var(--sar));
 }
 
 .heroTitle {
@@ -93,14 +103,18 @@ body {
 .surface {
   position: relative;
   z-index: 10;
+
   margin-top: -72px; /* peek overlap */
-  padding: 0 16px 64px;
+
+  /* bottom padding respects safe area */
+  padding: 0 16px calc(64px + var(--sab));
 }
 
 /* CARDS */
 .card {
   position: relative;
   z-index: 11;
+
   margin: 0 auto 18px;
   max-width: 760px;
 
