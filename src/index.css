@@ -1,5 +1,9 @@
-* { box-sizing: border-box; }
-html, body {
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
   margin: 0;
   padding: 0;
 }
@@ -7,18 +11,19 @@ html, body {
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: #0b0b0f;
-  color: rgba(255,255,255,0.92);
+  color: rgba(255, 255, 255, 0.92);
   overflow-x: hidden;
 }
 
-/* ===== HERO ===== */
+/* ================= HERO ================= */
+
 .hero {
   position: relative;
   width: 100%;
   overflow: hidden;
+  background: #0b0b0f;
 }
 
-/* Use real image instead of background-image */
 .heroImage {
   position: absolute;
   inset: 0;
@@ -27,30 +32,27 @@ body {
   object-fit: cover;
 }
 
-/* Static overlay for readability */
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(0,0,0,0.1),
-      rgba(0,0,0,0.25) 55%,
-      rgba(0,0,0,0.65) 100%
-    );
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.25) 55%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  pointer-events: none;
 }
 
-/* Content placement */
 .heroContent {
   position: relative;
   height: 100%;
-  max-width: 560px;
+  width: min(560px, 94vw);
   margin: 0 auto;
-
   display: grid;
   align-content: end;
-
-  padding: 24px 16px 140px;
+  padding: 24px 16px 160px;
+  gap: 10px;
 }
 
 .heroTitle {
@@ -58,30 +60,33 @@ body {
   font-size: 34px;
   font-weight: 900;
   line-height: 1.1;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
 }
 
 .heroDesc {
-  margin-top: 8px;
+  margin: 0;
   font-size: 14px;
   opacity: 0.82;
+  line-height: 1.45;
   max-width: 52ch;
 }
 
-/* ===== SURFACE ===== */
+/* ================= SURFACE ================= */
+
 .surface {
   background: #0b0b0f;
-  margin-top: -72px; /* Spotify-like peek */
-  padding: 0 16px 16px;
+  padding: 16px;
 }
 
-/* ===== CARDS ===== */
+/* ================= CARDS ================= */
+
 .card {
   margin-top: 16px;
   padding: 18px;
-  background: rgba(20,20,24,0.95);
+  background: rgba(20, 20, 24, 0.95);
   border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
 }
 
 .cardHeader {
@@ -97,6 +102,31 @@ body {
   line-height: 1.55;
 }
 
+/* ================= OVERVIEW CARD ONLY ================= */
+/* This is the ONLY behavioral change */
+
+.card--overview {
+  /* pull ONLY this card upward to bridge hero + surface */
+  margin-top: -56px;
+
+  /* keep it above hero overlay edge */
+  position: relative;
+  z-index: 6;
+}
+
+/* ensure spacing after overview stays clean */
+.card--overview + .card {
+  margin-top: 24px;
+}
+
+/* ================= MOBILE TWEAK ================= */
+
 @media (max-width: 420px) {
-  .heroTitle { font-size: 30px; }
+  .heroTitle {
+    font-size: 30px;
+  }
+
+  .card--overview {
+    margin-top: -48px;
+  }
 }
