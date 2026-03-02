@@ -1,8 +1,5 @@
 * { box-sizing: border-box; }
-html, body {
-  margin: 0;
-  padding: 0;
-}
+html, body { margin: 0; padding: 0; }
 
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -11,46 +8,58 @@ body {
   overflow-x: hidden;
 }
 
+/* ===== STACKING RULES (THIS FIXES THE COVERING) ===== */
+/* Hero must be behind */
+.hero { position: relative; z-index: 1; }
+/* Surface/cards must be above */
+.surface { position: relative; z-index: 10; }
+/* Cards extra-safe */
+.card { position: relative; z-index: 11; }
+
 /* ===== HERO ===== */
 .hero {
-  position: relative;
   width: 100%;
   overflow: hidden;
+  background: #0b0b0f;
 }
 
-/* Use real image instead of background-image */
+/* Image is the very back */
 .heroImage {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  z-index: 0;
 }
 
-/* Static overlay for readability */
+/* Overlay is above image, still behind content + cards */
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(0,0,0,0.1),
-      rgba(0,0,0,0.25) 55%,
-      rgba(0,0,0,0.65) 100%
-    );
+  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.10),
+    rgba(0,0,0,0.25) 55%,
+    rgba(0,0,0,0.68) 100%
+  );
+  pointer-events: none;
 }
 
-/* Content placement */
+/* Title block */
 .heroContent {
   position: relative;
+  z-index: 2;
   height: 100%;
-  max-width: 560px;
+  width: min(560px, 94vw);
   margin: 0 auto;
 
   display: grid;
   align-content: end;
 
   padding: 24px 16px 140px;
+  gap: 10px;
 }
 
 .heroTitle {
@@ -58,28 +67,47 @@ body {
   font-size: 34px;
   font-weight: 900;
   line-height: 1.1;
+  text-shadow: 0 10px 40px rgba(0,0,0,0.55);
 }
 
 .heroDesc {
-  margin-top: 8px;
+  margin: 0;
   font-size: 14px;
   opacity: 0.82;
+  line-height: 1.45;
   max-width: 52ch;
 }
 
-/* ===== SURFACE ===== */
+/* ===== SURFACE (Spotify-like peek) ===== */
+:root {
+  --peek: 72px; /* adjust to taste */
+}
+
+/* The whole surface overlaps slightly into hero */
 .surface {
   background: #0b0b0f;
-  margin-top: -72px; /* Spotify-like peek */
+  margin-top: calc(-1 * var(--peek));
   padding: 0 16px 16px;
+}
+
+/* Optional top fade to smooth the seam */
+.surface::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  top: 0;
+  height: 28px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0));
+  pointer-events: none;
 }
 
 /* ===== CARDS ===== */
 .card {
   margin-top: 16px;
   padding: 18px;
-  background: rgba(20,20,24,0.95);
   border-radius: 18px;
+
+  background: rgba(20,20,24,0.95);
   border: 1px solid rgba(255,255,255,0.06);
   box-shadow: 0 20px 60px rgba(0,0,0,0.35);
 }
@@ -97,6 +125,8 @@ body {
   line-height: 1.55;
 }
 
+/* Mobile tune */
 @media (max-width: 420px) {
   .heroTitle { font-size: 30px; }
+  :root { --peek: 64px; }
 }
