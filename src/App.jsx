@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export default function App() {
   const artwork =
-    "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1600&q=80&auto=format&fit=crop";
+    "https://image2url.com/r2/default/images/1772355798345-e4c9c96d-86bb-415f-85e0-7932a4873b8b.jpg";
 
   const [heroHeight, setHeroHeight] = useState(null);
 
