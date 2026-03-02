@@ -1,58 +1,71 @@
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
+/* ===================== RESET ===================== */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: #0b0b0f;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(255,255,255,0.92);
   overflow-x: hidden;
 }
 
-/* ================= HERO ================= */
+/* Optional: smooth fonts */
+:root {
+  --bg: #0b0b0f;
+  --card: rgba(20, 20, 24, 0.95);
+  --border: rgba(255, 255, 255, 0.06);
+  --shadow: 0 20px 60px rgba(0,0,0,0.35);
 
+  /* Spotify-like peek amount */
+  --peek: 40px;
+}
+
+/* ===================== HERO ===================== */
+/* IMPORTANT: hero must NOT cover cards */
 .hero {
   position: relative;
   width: 100%;
-  overflow: hidden;
-  background: #0b0b0f;
+  overflow: hidden;           /* ok to keep for cropping */
+  background: var(--bg);
+  z-index: 0;                 /* keep hero behind */
 }
 
+/* Background image */
 .heroImage {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  z-index: 0;
 }
 
+/* Gradient overlay */
 .heroOverlay {
   position: absolute;
   inset: 0;
+  pointer-events: none;
+  z-index: 1; /* still behind content/cards */
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.25) 55%,
-    rgba(0, 0, 0, 0.7) 100%
+    rgba(0,0,0,0.08),
+    rgba(0,0,0,0.30) 55%,
+    rgba(0,0,0,0.82) 100%
   );
-  pointer-events: none;
 }
 
+/* Hero text content */
 .heroContent {
   position: relative;
-  height: 100%;
-  width: min(560px, 94vw);
+  z-index: 2;                 /* text above overlay */
+  width: min(560px, 92vw);
   margin: 0 auto;
+  height: 100%;
   display: grid;
   align-content: end;
-  padding: 24px 16px 160px;
   gap: 10px;
+
+  /* This bottom padding creates space so Overview can "peek" */
+  padding: 24px 16px calc(96px + var(--peek));
 }
 
 .heroTitle {
@@ -60,73 +73,79 @@ body {
   font-size: 34px;
   font-weight: 900;
   line-height: 1.1;
-  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
+  text-shadow: 0 10px 40px rgba(0,0,0,0.55);
 }
 
 .heroDesc {
   margin: 0;
   font-size: 14px;
-  opacity: 0.82;
   line-height: 1.45;
-  max-width: 52ch;
+  opacity: 0.82;
+  max-width: 60ch;
 }
 
-/* ================= SURFACE ================= */
-
+/* ===================== SURFACE ===================== */
+/* IMPORTANT: surface must be a layer ABOVE hero */
 .surface {
-  background: #0b0b0f;
+  position: relative;
+  z-index: 10;
+  background: var(--bg);
   padding: 16px;
 }
 
-/* ================= CARDS ================= */
-
+/* ===================== CARDS ===================== */
 .card {
   margin-top: 16px;
   padding: 18px;
-  background: rgba(20, 20, 24, 0.95);
+  background: var(--card);
   border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+
+  /* Keep card content crisp above everything */
+  position: relative;
+  z-index: 11;
 }
 
 .cardHeader {
   margin: 0 0 8px;
   font-size: 16px;
   font-weight: 900;
+  color: rgba(255,255,255,0.95);
 }
 
 .cardText {
   margin: 0;
   font-size: 14px;
-  opacity: 0.82;
   line-height: 1.55;
+  opacity: 0.82;
 }
 
-/* ================= OVERVIEW CARD ONLY ================= */
-/* This is the ONLY behavioral change */
-
+/* ===================== OVERVIEW PEEK FIX ===================== */
+/*
+  This is the key: we overlap ONLY the first card into the hero,
+  BUT it stays ABOVE the hero (not covered).
+*/
 .card--overview {
-  /* pull ONLY this card upward to bridge hero + surface */
-  margin-top: -56px;
+  margin-top: calc(-1 * var(--peek)); /* small overlap only */
+  z-index: 20;                        /* ensure it stays above hero */
+}
 
-  /* keep it above hero overlay edge */
+/* Extra safety: never allow the Overview title to be hidden */
+.card--overview .cardHeader {
   position: relative;
-  z-index: 6;
+  z-index: 21;
+  opacity: 1;
+  visibility: visible;
 }
 
-/* ensure spacing after overview stays clean */
-.card--overview + .card {
-  margin-top: 24px;
-}
-
-/* ================= MOBILE TWEAK ================= */
-
+/* ===================== MOBILE TUNING ===================== */
 @media (max-width: 420px) {
-  .heroTitle {
-    font-size: 30px;
-  }
+  :root { --peek: 34px; }
 
-  .card--overview {
-    margin-top: -48px;
+  .heroTitle { font-size: 30px; }
+
+  .heroContent {
+    padding: 22px 14px calc(88px + var(--peek));
   }
 }
