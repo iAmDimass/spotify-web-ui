@@ -8,29 +8,33 @@ body {
   overflow-x: hidden;
 }
 
-/* Optional: smooth fonts */
-:root {
-  --bg: #0b0b0f;
+:root{
+  --bg:#0b0b0f;
   --card: rgba(20, 20, 24, 0.95);
-  --border: rgba(255, 255, 255, 0.06);
+  --border: rgba(255,255,255,0.06);
   --shadow: 0 20px 60px rgba(0,0,0,0.35);
 
-  /* Spotify-like peek amount */
-  --peek: 40px;
+  /* If you still want a small “peek” into the hero, keep this.
+     If you don’t want peek, set to 0px. */
+  --peek: 56px;
+}
+
+/* ===================== PAGE ===================== */
+.page{
+  min-height: 100vh;
+  background: var(--bg);
 }
 
 /* ===================== HERO ===================== */
-/* IMPORTANT: hero must NOT cover cards */
-.hero {
+.hero{
   position: relative;
   width: 100%;
-  overflow: hidden;           /* ok to keep for cropping */
+  overflow: hidden;
   background: var(--bg);
-  z-index: 0;                 /* keep hero behind */
+  z-index: 0; /* hero stays behind */
 }
 
-/* Background image */
-.heroImage {
+.heroImage{
   position: absolute;
   inset: 0;
   width: 100%;
@@ -39,12 +43,11 @@ body {
   z-index: 0;
 }
 
-/* Gradient overlay */
-.heroOverlay {
+.heroOverlay{
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 1; /* still behind content/cards */
+  z-index: 1;
   background: linear-gradient(
     to bottom,
     rgba(0,0,0,0.08),
@@ -53,22 +56,19 @@ body {
   );
 }
 
-/* Hero text content */
-.heroContent {
+.heroContent{
   position: relative;
-  z-index: 2;                 /* text above overlay */
+  z-index: 2; /* above overlay */
   width: min(560px, 92vw);
   margin: 0 auto;
   height: 100%;
   display: grid;
   align-content: end;
   gap: 10px;
-
-  /* This bottom padding creates space so Overview can "peek" */
   padding: 24px 16px calc(96px + var(--peek));
 }
 
-.heroTitle {
+.heroTitle{
   margin: 0;
   font-size: 34px;
   font-weight: 900;
@@ -76,7 +76,7 @@ body {
   text-shadow: 0 10px 40px rgba(0,0,0,0.55);
 }
 
-.heroDesc {
+.heroDesc{
   margin: 0;
   font-size: 14px;
   line-height: 1.45;
@@ -85,67 +85,59 @@ body {
 }
 
 /* ===================== SURFACE ===================== */
-/* IMPORTANT: surface must be a layer ABOVE hero */
-.surface {
+.surface{
   position: relative;
-  z-index: 10;
+  z-index: 10;             /* IMPORTANT: above hero/overlay */
   background: var(--bg);
   padding: 16px;
+  padding-top: var(--peek); /* reserve space if first card peeks */
 }
 
 /* ===================== CARDS ===================== */
-.card {
+.card{
   margin-top: 16px;
   padding: 18px;
   background: var(--card);
   border-radius: 18px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
-
-  /* Keep card content crisp above everything */
   position: relative;
   z-index: 11;
+  overflow: visible; /* IMPORTANT: never clip the header */
 }
 
-.cardHeader {
+/* If you want ONLY the first card to “peek” into hero, keep this class.
+   If you are NOT using this class in JSX, remove this block (safe). */
+.card--overview{
+  margin-top: calc(-1 * var(--peek));
+  z-index: 20;
+}
+
+.cardHeader{
   margin: 0 0 8px;
   font-size: 16px;
   font-weight: 900;
   color: rgba(255,255,255,0.95);
+  position: relative;
+  z-index: 2; /* IMPORTANT: keep above any overlays */
 }
 
-.cardText {
+.cardText{
   margin: 0;
   font-size: 14px;
   line-height: 1.55;
   opacity: 0.82;
-}
-
-/* ===================== OVERVIEW PEEK FIX ===================== */
-/*
-  This is the key: we overlap ONLY the first card into the hero,
-  BUT it stays ABOVE the hero (not covered).
-*/
-.card--overview {
-  margin-top: calc(-1 * var(--peek)); /* small overlap only */
-  z-index: 20;                        /* ensure it stays above hero */
-}
-
-/* Extra safety: never allow the Overview title to be hidden */
-.card--overview .cardHeader {
   position: relative;
-  z-index: 21;
-  opacity: 1;
-  visibility: visible;
+  z-index: 2;
 }
 
-/* ===================== MOBILE TUNING ===================== */
-@media (max-width: 420px) {
-  :root { --peek: 34px; }
+/* ===================== MOBILE ===================== */
+@media (max-width: 420px){
+  :root { --peek: 48px; }
 
-  .heroTitle { font-size: 30px; }
+  .heroTitle{ font-size: 30px; }
 
-  .heroContent {
+  .heroContent{
     padding: 22px 14px calc(88px + var(--peek));
   }
 }
