@@ -16,6 +16,7 @@ body {
   position: relative;
   width: 100%;
   overflow: hidden;
+  z-index: 0; /* ✅ hero base layer */
 }
 
 /* Use real image instead of background-image */
@@ -25,12 +26,15 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  z-index: 0; /* ✅ below overlay */
 }
 
 /* Static overlay for readability */
 .heroOverlay {
   position: absolute;
   inset: 0;
+  z-index: 1;          /* ✅ overlay above image */
+  pointer-events: none;/* ✅ overlay never blocks UI */
   background:
     linear-gradient(
       to bottom,
@@ -43,6 +47,7 @@ body {
 /* Content placement */
 .heroContent {
   position: relative;
+  z-index: 2; /* ✅ above overlay */
   height: 100%;
   max-width: 560px;
   margin: 0 auto;
@@ -70,8 +75,11 @@ body {
 /* ===== SURFACE ===== */
 .surface {
   background: #0b0b0f;
-  margin-top: -72px; /* Spotify-like peek */
+  margin-top: -72px; /* peek kamu */
   padding: 0 16px 16px;
+
+  position: relative;
+  z-index: 10; /* ✅ THIS is the key: surface above heroOverlay */
 }
 
 /* ===== CARDS ===== */
