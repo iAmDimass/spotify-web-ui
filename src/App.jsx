@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function App() {
-  // ✅ Your MP4
   const videoSrc =
     "https://image2url.com/r2/default/videos/1772529007332-748e1086-4c90-40f2-b29b-e9614d766984.mp4";
 
-  // ✅ Your poster
   const posterSrc =
     "https://image2url.com/r2/default/images/1772355798345-e4c9c96d-86bb-415f-85e0-7932a4873b8b.jpg";
 
@@ -13,8 +11,11 @@ export default function App() {
 
   // Video state
   const [isMuted, setIsMuted] = useState(true); // must start muted for autoplay
-  const [isPlaying, setIsPlaying] = useState(true); // auto intent
+  const [isPlaying, setIsPlaying] = useState(true); // auto intent (when allowed)
   const [userPaused, setUserPaused] = useState(false); // manual override
+
+  // Page/viewport state (performance)
+  const [pageVisible, setPageVisible] = useState(true);
 
   // “flash icon” state (appears once then disappears)
   const [flash, setFlash] = useState(null); // "play" | "pause" | null
@@ -32,6 +33,28 @@ export default function App() {
 
     setHeroHeight(height);
   }, []);
+
+  // ✅ 1) Pause/resume when tab/app visibility changes
+  useEffect(() => {
+    const onVis = () => {
+      const visible = document.visibilityState === "visible";
+      setPageVisible(visible);
+
+      // If hidden, always stop playback (but don't mark userPaused)
+      if (!visible) {
+        setIsPlaying(false);
+        return;
+      }
+
+      // If visible again, resume only if user didn't manually pause
+      if (!userPaused) {
+        setIsPlaying(true);
+      }
+    };
+
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [userPaused]);
 
   // Helper: attempt play (handles browser blocking)
   const tryPlay = async () => {
@@ -55,10 +78,16 @@ export default function App() {
     v.volume = isMuted ? 0 : 1;
   }, [isMuted]);
 
-  // Sync play/pause with state (respect userPaused)
+  // Sync play/pause with state (respect userPaused and page visibility)
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
+
+    // If page is hidden, pause no matter what
+    if (!pageVisible) {
+      v.pause();
+      return;
+    }
 
     if (isPlaying && !userPaused) {
       tryPlay();
@@ -66,7 +95,7 @@ export default function App() {
       v.pause();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPlaying, userPaused]);
+  }, [isPlaying, userPaused, pageVisible]);
 
   // Option B: Pause when hero leaves viewport, resume when back (if not userPaused)
   useEffect(() => {
@@ -82,7 +111,11 @@ export default function App() {
           setIsPlaying(false);
           return;
         }
-        if (!userPaused) {
+
+        // Resume only if:
+        // - user didn't manually pause
+        // - page is visible
+        if (!userPaused && pageVisible) {
           setIsPlaying(true);
         }
       },
@@ -91,7 +124,7 @@ export default function App() {
 
     io.observe(el);
     return () => io.disconnect();
-  }, [userPaused]);
+  }, [userPaused, pageVisible]);
 
   const showFlash = (type) => {
     setFlash(type);
@@ -154,7 +187,7 @@ export default function App() {
           muted
           playsInline
           loop
-          preload="auto"
+          preload="metadata"   /* ✅ 2) lighter preload for performance */
         />
 
         <div className="heroOverlay" />
@@ -229,4 +262,4 @@ export default function App() {
       </main>
     </div>
   );
-      }
+}
