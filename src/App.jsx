@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function App() {
   // ✅ Put your MP4 here (best: MP4 H.264). Keep it short + loopable.
-  const videoSrc = "https://your-cdn.com/hero.mp4";
+  const videoSrc = "https://image2url.com/r2/default/videos/1772529007332-748e1086-4c90-40f2-b29b-e9614d766984.mp4";
 
   // ✅ Poster shown instantly + used if autoplay fails
   const posterSrc =
