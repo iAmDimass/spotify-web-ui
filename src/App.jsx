@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function App() {
-  // ✅ Put your MP4 here (best: MP4 H.264). Keep it short + loopable.
-  const videoSrc = "https://image2url.com/r2/default/videos/1772529007332-748e1086-4c90-40f2-b29b-e9614d766984.mp4";
+  // ✅ Your MP4
+  const videoSrc =
+    "https://image2url.com/r2/default/videos/1772529007332-748e1086-4c90-40f2-b29b-e9614d766984.mp4";
 
-  // ✅ Poster shown instantly + used if autoplay fails
+  // ✅ Your poster
   const posterSrc =
     "https://image2url.com/r2/default/images/1772355798345-e4c9c96d-86bb-415f-85e0-7932a4873b8b.jpg";
 
@@ -12,8 +13,12 @@ export default function App() {
 
   // Video state
   const [isMuted, setIsMuted] = useState(true); // must start muted for autoplay
-  const [isPlaying, setIsPlaying] = useState(true); // desired state (autoplay)
-  const [userPaused, setUserPaused] = useState(false); // user intent override
+  const [isPlaying, setIsPlaying] = useState(true); // auto intent
+  const [userPaused, setUserPaused] = useState(false); // manual override
+
+  // “flash icon” state (appears once then disappears)
+  const [flash, setFlash] = useState(null); // "play" | "pause" | null
+  const flashTimerRef = useRef(null);
 
   const heroRef = useRef(null);
   const videoRef = useRef(null);
@@ -36,13 +41,12 @@ export default function App() {
       const p = v.play();
       if (p && typeof p.then === "function") await p;
     } catch {
-      // Autoplay can be blocked by browser settings / low power mode.
-      // Poster will show, and user can hit Play.
+      // Autoplay can be blocked. Poster still shows; user can tap to play.
       setIsPlaying(false);
     }
   };
 
-  // Keep DOM video muted in sync with state
+  // Sync mute
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
@@ -51,7 +55,7 @@ export default function App() {
     v.volume = isMuted ? 0 : 1;
   }, [isMuted]);
 
-  // Keep DOM playing in sync with state (only if user didn’t manually pause)
+  // Sync play/pause with state (respect userPaused)
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
@@ -64,7 +68,7 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying, userPaused]);
 
-  // Option B: Pause when hero leaves viewport, resume when it re-enters
+  // Option B: Pause when hero leaves viewport, resume when back (if not userPaused)
   useEffect(() => {
     const el = heroRef.current;
     if (!el) return;
@@ -74,52 +78,64 @@ export default function App() {
         const entry = entries[0];
         const inView = entry?.isIntersecting;
 
-        // If out of view: pause (but don't mark as userPaused)
         if (!inView) {
           setIsPlaying(false);
           return;
         }
-
-        // If back in view: resume ONLY if user didn't manually pause
         if (!userPaused) {
           setIsPlaying(true);
         }
       },
-      {
-        // triggers when it becomes fully out or back in
-        threshold: 0,
-      }
+      { threshold: 0 }
     );
 
     io.observe(el);
     return () => io.disconnect();
   }, [userPaused]);
 
-  const playIcon = useMemo(() => (isPlaying && !userPaused ? "⏸" : "▶"), [isPlaying, userPaused]);
-  const soundIcon = useMemo(() => (isMuted ? "🔇" : "🔊"), [isMuted]);
+  const showFlash = (type) => {
+    setFlash(type);
 
-  const onTogglePlay = async () => {
+    if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+    flashTimerRef.current = setTimeout(() => {
+      setFlash(null);
+      flashTimerRef.current = null;
+    }, 650);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+    };
+  }, []);
+
+  // Tap only the VIDEO LAYER (not text/controls)
+  const onTogglePlayFromVideoTap = async () => {
     const v = videoRef.current;
     if (!v) return;
 
     const currentlyPlaying = !v.paused && !v.ended;
 
     if (currentlyPlaying) {
-      // user pauses manually
       v.pause();
       setUserPaused(true);
       setIsPlaying(false);
+      showFlash("pause");
     } else {
-      // user plays manually
       setUserPaused(false);
       setIsPlaying(true);
       await tryPlay();
+      showFlash("play");
     }
   };
 
   const onToggleMute = () => {
     setIsMuted((m) => !m);
   };
+
+  const soundLabel = useMemo(() => (isMuted ? "Muted" : "Sound"), [isMuted]);
+  const soundIcon = useMemo(() => (isMuted ? "🔇" : "🔊"), [isMuted]);
+  const flashIcon = flash === "play" ? "▶" : flash === "pause" ? "⏸" : "";
 
   return (
     <div className="page">
@@ -143,6 +159,21 @@ export default function App() {
 
         <div className="heroOverlay" />
 
+        {/* Tap layer sits ABOVE video/overlay but BELOW text+controls */}
+        <button
+          type="button"
+          className="heroTapLayer"
+          aria-label="Toggle video play/pause"
+          onClick={onTogglePlayFromVideoTap}
+        />
+
+        {/* One-time flash indicator */}
+        {flash && (
+          <div className="heroFlash" aria-hidden="true">
+            <div className="heroFlashIcon">{flashIcon}</div>
+          </div>
+        )}
+
         <div className="heroContent">
           <h1 className="heroTitle">Discover New Experiences</h1>
           <p className="heroDesc">
@@ -151,16 +182,18 @@ export default function App() {
           </p>
         </div>
 
-        {/* VISIBLE VIDEO CONTROLS */}
+        {/* Controls: ONLY Mute/Unmute */}
         <div className="heroControls" aria-label="Video controls">
-          <button className="heroBtn" type="button" onClick={onTogglePlay} aria-label="Play/pause">
-            <span className="heroBtnIcon" aria-hidden="true">{playIcon}</span>
-            <span className="heroBtnText">{isPlaying && !userPaused ? "Pause" : "Play"}</span>
-          </button>
-
-          <button className="heroBtn" type="button" onClick={onToggleMute} aria-label="Mute/unmute">
-            <span className="heroBtnIcon" aria-hidden="true">{soundIcon}</span>
-            <span className="heroBtnText">{isMuted ? "Muted" : "Sound"}</span>
+          <button
+            className="heroBtn"
+            type="button"
+            onClick={onToggleMute}
+            aria-label="Mute/unmute"
+          >
+            <span className="heroBtnIcon" aria-hidden="true">
+              {soundIcon}
+            </span>
+            <span className="heroBtnText">{soundLabel}</span>
           </button>
         </div>
       </section>
@@ -196,4 +229,4 @@ export default function App() {
       </main>
     </div>
   );
-}
+      }
